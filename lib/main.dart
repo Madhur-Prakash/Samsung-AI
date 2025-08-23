@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:samsung_ai/services/embeddings.dart';
+import 'package:samsung_ai/services/vector_store.dart';
 import 'services/crypto_service.dart';
 import 'services/pipeline.dart';
 
@@ -30,6 +32,49 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String _status = "Idle";
+  final TextEditingController _chatController = TextEditingController();
+  String _chatResponse = "";
+
+
+/// Ask a question against the embeddings in VectorStore
+Future<void> _askQuestion() async {
+  final query = _chatController.text.trim();
+  if (query.isEmpty) return;
+
+  setState(() => _status = "Searching embeddings...");
+
+  // Load embeddings + vector store
+  final embeddings = await Embeddings.load(
+    modelAsset: 'assets/models/sentence_transformer.tflite',
+    vocabAsset: 'assets/tokenizer/vocab.txt',
+    maxLen: 128,
+    embedSize: 384,
+  );
+  final store = await VectorStore.open(embedSize: 384);
+
+  // Turn query into embedding
+  final queryVec = embeddings.embed(query);
+
+  // Search nearest vectors
+  final results = await store.search(queryVec, topK: 3); // top 3 matches
+
+  embeddings.close();
+
+  if (results.isEmpty) {
+    setState(() {
+      _chatResponse = "No relevant chunks found.";
+      _status = "Q&A done.";
+    });
+  } else {
+    // Just join the top text matches for now
+    final answer = results.map((r) => r.text).join("\n\n");
+    setState(() {
+      _chatResponse = answer;
+      _status = "Q&A done.";
+    });
+  }
+}
+
 
   /// Always work inside /enc_files
   Future<String> _appDirPath() async {
@@ -192,6 +237,27 @@ Future<void> _decryptAll() async {
               label: const Text("Run Pipeline"),
               onPressed: _runPipeline,
             ),
+            const SizedBox(height: 24),
+            TextField(
+              controller: _chatController,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: "Ask a question",
+              ),
+            ),
+            const SizedBox(height: 12),
+            ElevatedButton.icon(
+              icon: const Icon(Icons.question_answer),
+              label: const Text("Ask"),
+              onPressed: _askQuestion,
+            ),
+            const SizedBox(height: 12),
+            Text(
+              _chatResponse,
+              style: const TextStyle(fontSize: 14),
+              textAlign: TextAlign.left,
+            ),
+
             const SizedBox(height: 12),
             ElevatedButton.icon(
               icon: const Icon(Icons.list),
