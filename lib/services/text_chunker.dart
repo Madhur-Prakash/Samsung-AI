@@ -13,9 +13,8 @@ class TextChunker {
       final candidate = (sb.isEmpty ? '' : '${sb.toString()} ') + line.trim();
       if (candidate.length > chunkSize) {
         final current = sb.toString().trim();
-        if (current.isNotEmpty) {
-          chunks.add('passage: $current');
-        }
+        if (current.isNotEmpty) chunks.add('passage: $current');
+
         final tail = current.length > overlap
             ? current.substring(current.length - overlap)
             : current;
@@ -26,6 +25,7 @@ class TextChunker {
         sb.write(candidate);
       }
     }
+
     final tail = sb.toString().trim();
     if (tail.isNotEmpty) chunks.add('passage: $tail');
     return chunks;

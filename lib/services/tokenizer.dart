@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
 
-/// Minimal WordPiece tokenizer for BERT-like models (uncased).
 class BertTokenizer {
   late final Map<String, int> vocab;
   final String unkToken;
@@ -14,35 +13,25 @@ class BertTokenizer {
     final vocabText = await rootBundle.loadString(assetPath);
     final lines = const LineSplitter().convert(vocabText);
     final map = <String, int>{};
-    for (var i = 0; i < lines.length; i++) {
-      map[lines[i].trim()] = i;
-    }
+    for (var i = 0; i < lines.length; i++) map[lines[i].trim()] = i;
     return BertTokenizer._(map, unkToken: unkToken, doLowerCase: doLowerCase);
   }
 
   List<int> encode(String text, {int maxLen = 128}) {
     final tokens = _tokenize(text);
-    // Add special tokens if your model expects them. MiniLM often uses [CLS]/[SEP].
     final wp = ["[CLS]", ...tokens, "[SEP]"];
     final ids = wp.map((t) => vocab[t] ?? vocab[unkToken]!).toList();
-    // pad/truncate
     final padded = List<int>.filled(maxLen, vocab["[PAD]"] ?? 0);
-    for (int i = 0; i < ids.length && i < maxLen; i++) {
-      padded[i] = ids[i];
-    }
+    for (int i = 0; i < ids.length && i < maxLen; i++) padded[i] = ids[i];
     return padded;
   }
 
   List<String> _tokenize(String text) {
-    String t = text;
-    if (doLowerCase) t = t.toLowerCase();
-    // Basic: split on whitespace + punctuation spacing
+    String t = doLowerCase ? text.toLowerCase() : text;
     t = t.replaceAll(RegExp(r'\s+'), ' ').trim();
     final words = t.split(RegExp(r"\s+")).where((w) => w.isNotEmpty).toList();
     final List<String> output = [];
-    for (final w in words) {
-      output.addAll(_wordpiece(w));
-    }
+    for (final w in words) output.addAll(_wordpiece(w));
     return output;
   }
 
@@ -62,9 +51,7 @@ class BertTokenizer {
         }
         end -= 1;
       }
-      if (curSubStr.isEmpty) {
-        return [unkToken];
-      }
+      if (curSubStr.isEmpty) return [unkToken];
       subTokens.add(curSubStr);
       start = end;
     }

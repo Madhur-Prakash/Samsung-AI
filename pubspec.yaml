@@ -63,6 +63,7 @@ flutter:
     - assets/models/sentence_transformer.tflite
     # WordPiece vocab for tokenizer (you provide vocab.txt from the model)
     - assets/tokenizer/vocab.txt
+    - assets/enc_files/
 
 dependency_overrides:
   tflite_flutter:

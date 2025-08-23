@@ -34,30 +34,22 @@ class VectorStore {
     return VectorStore._(db, embedSize);
   }
 
-  Future<void> clear() async {
-    await db.delete('embeddings');
-  }
+  Future<void> clear() async => db.delete('embeddings');
 
   Future<void> upsertBatch(List<({String text, List<double> vec})> items) async {
     final batch = db.batch();
     for (final item in items) {
-      batch.insert('embeddings', {
-        'text': item.text,
-        'vec': _floatsToBytes(item.vec),
-      });
+      batch.insert('embeddings', {'text': item.text, 'vec': _floatsToBytes(item.vec)});
     }
     await batch.commit(noResult: true);
   }
 
-  Future<List<Map<String, dynamic>>> all() async {
-    return db.query('embeddings');
-  }
+  Future<List<Map<String, dynamic>>> all() async => db.query('embeddings');
 
   Future<DateTime?> createdTime() async {
     final path = await _dbPath();
     try {
-      final fileStat = await File(path).stat();
-      return fileStat.changed;
+      return (await File(path).stat()).changed;
     } catch (_) {
       return null;
     }
@@ -66,26 +58,18 @@ class VectorStore {
   Future<List<({String text, double score})>> search(List<double> queryVec, {int topK = 5}) async {
     final rows = await all();
     final results = <({String text, double score})>[];
-
     for (final r in rows) {
-      final blob = r['vec'] as Uint8List;
-      final text = r['text'] as String;
-      final vec = _bytesToFloats(blob);
+      final vec = _bytesToFloats(r['vec'] as Uint8List);
       final score = _cosine(vec, queryVec);
-      results.add((text: text, score: score));
+      results.add((text: r['text'] as String, score: score));
     }
-
     results.sort((a, b) => b.score.compareTo(a.score));
-    if (results.length > topK) return results.take(topK).toList();
-    return results;
+    return results.take(topK).toList();
   }
 
-  // --- Helpers ---
   Uint8List _floatsToBytes(List<double> floats) {
     final b = ByteData(4 * floats.length);
-    for (int i = 0; i < floats.length; i++) {
-      b.setFloat32(i * 4, floats[i], Endian.little);
-    }
+    for (int i = 0; i < floats.length; i++) b.setFloat32(i * 4, floats[i], Endian.little);
     return b.buffer.asUint8List();
   }
 
@@ -93,9 +77,7 @@ class VectorStore {
     final b = ByteData.sublistView(bytes);
     final len = bytes.length ~/ 4;
     final out = List<double>.filled(len, 0);
-    for (int i = 0; i < len; i++) {
-      out[i] = b.getFloat32(i * 4, Endian.little);
-    }
+    for (int i = 0; i < len; i++) out[i] = b.getFloat32(i * 4, Endian.little);
     return out;
   }
 
