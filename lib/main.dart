@@ -47,58 +47,93 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _createTestFile() async {
     final dirPath = await _appDirPath();
     final file = File("$dirPath/${DateTime.now().millisecondsSinceEpoch}.txt");
-    await file.writeAsString("hello", flush: true);
+    await file.writeAsString("hello, how u doing?", flush: true);
     print("Created test file at ${file.path}");
     setState(() => _status = "Created ${file.path} with 'hello'");
   }
 
   /// Encrypt all `.txt` files in /enc_files → `.enc`
-  Future<void> _encryptAll() async {
-    setState(() => _status = "Encrypting files...");
-    final dirPath = await _appDirPath();
-    final dir = Directory(dirPath);
+ Future<void> _encryptAll() async {
+  setState(() => _status = "Encrypting files...");
 
-    final files = dir
-        .listSync()
-        .where((e) => e is File && e.path.endsWith(".txt"))
-        .cast<File>();
+  final dirPath = await _appDirPath();
+  final dir = Directory(dirPath);
 
-    print("Encrypting ${files.length} .txt files in $dirPath");
+  // Collect only .txt files
+  final files = dir
+      .listSync()
+      .where((e) => e is File && e.path.endsWith(".txt"))
+      .cast<File>()
+      .toList();
 
-    final crypto = CryptoService();
-    await crypto.init();
-
-    for (final f in files) {
-      final outPath = "${f.path}.enc"; // same folder, just adds .enc
-      await crypto.encryptFile(f, outPath);
-      print("Encrypted: ${f.path} → $outPath");
-    }
-
-    setState(() => _status = "Encrypted ${files.length} files");
+  if (files.isEmpty) {
+    setState(() => _status = "No .txt files found in $dirPath");
+    return;
   }
+
+  print("Encrypting ${files.length} .txt files in $dirPath");
+
+  final crypto = CryptoService();
+  await crypto.loadKeyEncrypt();
+
+  int successCount = 0;
+
+  for (final f in files) {
+    try {
+      final outPath = f.path.replaceFirst(RegExp(r'\.txt$'), '.enc');
+
+      await crypto.encryptFile(f, outPath);
+
+      // Remove original .txt after successful encryption
+      await f.delete();
+
+      print("Encrypted: ${f.path} → $outPath");
+      successCount++;
+    } catch (e, st) {
+      print("❌ Failed to encrypt ${f.path}: $e\n$st");
+    }
+  }
+
+  setState(() => _status = "Encrypted $successCount/${files.length} files");
+}
+
 
   /// Decrypt all `.enc` files in /enc_files → restore original `.txt`
-  Future<void> _decryptAll() async {
-    setState(() => _status = "Decrypting files...");
-    final dirPath = await _appDirPath();
-    final dir = Directory(dirPath);
+Future<void> _decryptAll() async {
+  setState(() => _status = "Decrypting files...");
+  final dirPath = await _appDirPath();
+  final dir = Directory(dirPath);
 
-    final files = dir
-        .listSync()
-        .where((e) => e is File && e.path.endsWith(".enc"))
-        .cast<File>();
+  final files = dir
+      .listSync()
+      .where((e) => e is File && e.path.endsWith(".enc"))
+      .cast<File>()
+      .toList();
 
-    print("Decrypting ${files.length} .enc files in $dirPath");
-
-    final crypto = CryptoService();
-    await crypto.init();
-
-    for (final f in files) {
-      await crypto.decryptFile(f); // restores .txt
-    }
-
-    setState(() => _status = "Decrypted ${files.length} files");
+  if (files.isEmpty) {
+    setState(() => _status = "No .enc files found in $dirPath");
+    return;
   }
+
+  print("Decrypting ${files.length} .enc files in $dirPath");
+
+  final crypto = CryptoService();
+  await crypto.loadKeyDecrypt();
+
+  int successCount = 0;
+
+  for (final f in files) {
+    try {
+      await crypto.decryptFile(f); // restores .txt + deletes .enc
+      successCount++;
+    } catch (e, st) {
+      print("❌ Failed to decrypt ${f.path}: $e\n$st");
+    }
+  }
+
+  setState(() => _status = "Decrypted $successCount/${files.length} files");
+}
+
 
   /// Run pipeline (decrypt → chunk → embeddings → vector store)
   Future<void> _runPipeline() async {

@@ -12,7 +12,7 @@ class CryptoService {
   late Uint8List _keyBytes;
 
   /// Initialize service: load or generate key
-  Future<void> init() async {
+  Future<void> loadKeyEncrypt() async {
     final dir = await getApplicationDocumentsDirectory();
     final keyFile = File('${dir.path}/$_keyFileName');
 
@@ -23,6 +23,19 @@ class CryptoService {
       _keyBytes = _generateRandomKey(_keyLength);
       await keyFile.writeAsBytes(_keyBytes, flush: true);
       print("New key generated and saved at: ${keyFile.path}");
+    }
+  }
+
+  /// Load the encryption key for decryption
+  Future<void> loadKeyDecrypt() async {
+    final dir = await getApplicationDocumentsDirectory();
+    final keyFile = File('${dir.path}/$_keyFileName');
+
+    if (await keyFile.exists()) {
+      _keyBytes = await keyFile.readAsBytes();
+      print("Key loaded for decryption from: ${keyFile.path}");
+    } else {
+      throw Exception("Key file not found");
     }
   }
 
@@ -55,31 +68,41 @@ class CryptoService {
   }
 
   /// Decrypt a file -> restore original
-  Future<File> decryptFile(File encFile, {String? outputPath}) async {
-    final key = enc.Key(_keyBytes);
-    final content = await encFile.readAsBytes();
+Future<File> decryptFile(File encFile, {String? outputPath}) async {
+  final key = enc.Key(_keyBytes);
+  final content = await encFile.readAsBytes();
 
-    if (content.length < 12 + 16) {
-      throw Exception("Invalid encrypted file: ${encFile.path}");
-    }
-
-    // [IV (12 bytes)] + [Ciphertext+Tag]
-    final iv = enc.IV(content.sublist(0, 12));
-    final cipherAndTag = content.sublist(12);
-
-    final encrypter = enc.Encrypter(enc.AES(key, mode: enc.AESMode.gcm));
-    final decrypted = encrypter.decryptBytes(
-      enc.Encrypted(cipherAndTag),
-      iv: iv,
-    );
-
-    final outPath = outputPath ?? p.setExtension(encFile.path, '.txt');
-    final outFile = File(outPath);
-    await outFile.writeAsBytes(decrypted, flush: true);
-
-    print("File decrypted: ${outFile.path}");
-    return outFile;
+  if (content.length < 12 + 16) {
+    throw Exception("Invalid encrypted file: ${encFile.path}");
   }
+
+  // [IV (12 bytes)] + [Ciphertext+Tag]
+  final iv = enc.IV(content.sublist(0, 12));
+  final cipherAndTag = content.sublist(12);
+
+  final encrypter = enc.Encrypter(enc.AES(key, mode: enc.AESMode.gcm));
+  final decrypted = encrypter.decryptBytes(
+    enc.Encrypted(cipherAndTag),
+    iv: iv,
+  );
+
+  final outPath = outputPath ?? p.setExtension(encFile.path, '.txt');
+  final outFile = File(outPath);
+
+  await outFile.writeAsBytes(decrypted, flush: true);
+
+  // Remove the encrypted file only if decryption succeeded
+  try {
+    await encFile.delete();
+    print("Deleted encrypted file: ${encFile.path}");
+  } catch (e) {
+    print("⚠️ Could not delete encrypted file: ${encFile.path} — $e");
+  }
+
+  print("File decrypted: ${outFile.path}");
+  return outFile;
+}
+
 
   /// Decrypt all `.enc` files in a directory
   Future<int> decryptDirectory(String dirPath) async {

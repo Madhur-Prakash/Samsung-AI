@@ -34,7 +34,7 @@ class Pipeline {
 
     // Decrypt .enc → .txt
     final crypto = CryptoService();
-    await crypto.init(); // reads or creates key automatically
+    await crypto.loadKeyEncrypt(); // reads or creates key automatically
     final decCount = await crypto.decryptDirectory(textDir.path);
     print("Decrypted $decCount files in: ${textDir.path}");
 
