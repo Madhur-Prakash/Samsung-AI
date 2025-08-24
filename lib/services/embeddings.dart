@@ -12,7 +12,7 @@ class Embeddings {
   static Future<Embeddings> load({
     String modelAsset = 'assets/models/sentence_transformer.tflite',
     String vocabAsset = 'assets/tokenizer/vocab.txt',
-    int maxLen = 128,
+    int maxLen = 128, 
     int embedSize = 384,
   }) async {
     final interpreter = await Interpreter.fromAsset(modelAsset);
