@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+
 import 'package:samsung_ai/services/embeddings.dart';
 import 'package:samsung_ai/services/vector_store.dart';
 import 'services/crypto_service.dart';
@@ -35,160 +36,154 @@ class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _chatController = TextEditingController();
   String _chatResponse = "";
 
-
-/// Ask a question against the embeddings in VectorStore
-Future<void> _askQuestion() async {
-  final query = _chatController.text.trim();
-  if (query.isEmpty) return;
-
-  setState(() => _status = "Searching embeddings...");
-
-  // Load embeddings + vector store
-  final embeddings = await Embeddings.load(
-    modelAsset: 'assets/models/sentence_transformer.tflite',
-    vocabAsset: 'assets/tokenizer/vocab.txt',
-    maxLen: 128,
-    embedSize: 384,
-  );
-  final store = await VectorStore.open(embedSize: 384);
-
-  // Turn query into embedding
-  final queryVec = embeddings.embed(query);
-
-  // Search nearest vectors
-  final results = await store.search(queryVec, topK: 3); // top 3 matches
-
-  embeddings.close();
-
-  if (results.isEmpty) {
-    setState(() {
-      _chatResponse = "No relevant chunks found.";
-      _status = "Q&A done.";
-    });
-  } else {
-    // Just join the top text matches for now
-    final answer = results.map((r) => r.text).join("\n\n");
-    setState(() {
-      _chatResponse = answer;
-      _status = "Q&A done.";
-    });
-  }
-}
-
-
   /// Always work inside /enc_files
   Future<String> _appDirPath() async {
     final dir = await getApplicationDocumentsDirectory();
     final encDir = Directory("${dir.path}/enc_files");
-    print("App documents directory: ${dir.path}");
-    print("Working in enc_files directory: ${encDir.path}");
     if (!await encDir.exists()) {
       await encDir.create(recursive: true);
     }
     return encDir.path;
   }
 
-  /// Create a test .txt file with "hello"
+  /// Create a test .txt file with sample content
   Future<void> _createTestFile() async {
     final dirPath = await _appDirPath();
-    final file = File("$dirPath/${DateTime.now().millisecondsSinceEpoch}.txt");
-    await file.writeAsString("hello, how u doing?", flush: true);
-    print("Created test file at ${file.path}");
-    setState(() => _status = "Created ${file.path} with 'hello'");
+    final timestamp = DateTime.now().millisecondsSinceEpoch;
+    final file = File("$dirPath/sample_$timestamp.txt");
+    
+    final sampleText = """
+This is a sample document about artificial intelligence and machine learning.
+AI has revolutionized many industries including healthcare, finance, and technology.
+Machine learning algorithms can process large amounts of data to find patterns.
+Natural language processing helps computers understand human language.
+Deep learning uses neural networks to solve complex problems.
+The future of AI looks very promising with many exciting developments ahead.
+""";
+    
+    await file.writeAsString(sampleText, flush: true);
+    setState(() => _status = "Created test file at ${file.path}");
   }
 
   /// Encrypt all `.txt` files in /enc_files → `.enc`
- Future<void> _encryptAll() async {
-  setState(() => _status = "Encrypting files...");
+  Future<void> _encryptAll() async {
+    setState(() => _status = "Encrypting files...");
+    final dirPath = await _appDirPath();
+    final dir = Directory(dirPath);
 
-  final dirPath = await _appDirPath();
-  final dir = Directory(dirPath);
+    final files = dir
+        .listSync()
+        .where((e) => e is File && e.path.endsWith(".txt"))
+        .cast<File>()
+        .toList();
 
-  // Collect only .txt files
-  final files = dir
-      .listSync()
-      .where((e) => e is File && e.path.endsWith(".txt"))
-      .cast<File>()
-      .toList();
-
-  if (files.isEmpty) {
-    setState(() => _status = "No .txt files found in $dirPath");
-    return;
-  }
-
-  print("Encrypting ${files.length} .txt files in $dirPath");
-
-  final crypto = CryptoService();
-  await crypto.loadKeyEncrypt();
-
-  int successCount = 0;
-
-  for (final f in files) {
-    try {
-      final outPath = f.path.replaceFirst(RegExp(r'\.txt$'), '.enc');
-
-      await crypto.encryptFile(f, outPath);
-
-      // Remove original .txt after successful encryption
-      await f.delete();
-
-      print("Encrypted: ${f.path} → $outPath");
-      successCount++;
-    } catch (e, st) {
-      print("❌ Failed to encrypt ${f.path}: $e\n$st");
+    if (files.isEmpty) {
+      setState(() => _status = "No .txt files found in $dirPath");
+      return;
     }
+
+    final crypto = CryptoService();
+    await crypto.loadKeyEncrypt();
+
+    int successCount = 0;
+    for (final f in files) {
+      try {
+        final outPath = f.path.replaceFirst(RegExp(r'\.txt$'), '.enc');
+        await crypto.encryptFile(f, outPath);
+        await f.delete();
+        successCount++;
+      } catch (e, st) {
+        print("❌ Failed to encrypt ${f.path}: $e\n$st");
+      }
+    }
+
+    setState(() => _status = "Encrypted $successCount/${files.length} files");
   }
-
-  setState(() => _status = "Encrypted $successCount/${files.length} files");
-}
-
 
   /// Decrypt all `.enc` files in /enc_files → restore original `.txt`
-Future<void> _decryptAll() async {
-  setState(() => _status = "Decrypting files...");
-  final dirPath = await _appDirPath();
-  final dir = Directory(dirPath);
+  Future<void> _decryptAll() async {
+    setState(() => _status = "Decrypting files...");
+    final dirPath = await _appDirPath();
+    final dir = Directory(dirPath);
 
-  final files = dir
-      .listSync()
-      .where((e) => e is File && e.path.endsWith(".enc"))
-      .cast<File>()
-      .toList();
+    final files = dir
+        .listSync()
+        .where((e) => e is File && e.path.endsWith(".enc"))
+        .cast<File>()
+        .toList();
 
-  if (files.isEmpty) {
-    setState(() => _status = "No .enc files found in $dirPath");
-    return;
+    if (files.isEmpty) {
+      setState(() => _status = "No .enc files found in $dirPath");
+      return;
+    }
+
+    final crypto = CryptoService();
+    await crypto.loadKeyDecrypt();
+
+    int successCount = 0;
+    for (final f in files) {
+      try {
+        await crypto.decryptFile(f); // restores .txt + deletes .enc
+        successCount++;
+      } catch (e, st) {
+        print("❌ Failed to decrypt ${f.path}: $e\n$st");
+      }
+    }
+
+    setState(() => _status = "Decrypted $successCount/${files.length} files");
   }
 
-  print("Decrypting ${files.length} .enc files in $dirPath");
-
-  final crypto = CryptoService();
-  await crypto.loadKeyDecrypt();
-
-  int successCount = 0;
-
-  for (final f in files) {
+  /// Run pipeline (decrypt → chunk → embeddings → vector store → re-encrypt)
+  Future<void> _runPipeline() async {
+    setState(() => _status = "Running pipeline...");
     try {
-      await crypto.decryptFile(f); // restores .txt + deletes .enc
-      successCount++;
-    } catch (e, st) {
-      print("❌ Failed to decrypt ${f.path}: $e\n$st");
+      final pipeline = Pipeline(aesKey32: List.filled(32, 1)); // dummy key for now
+      final result = await pipeline.run();
+      setState(() => _status = 
+          "Pipeline done: ${result.totalChunks} chunks, ${result.totalEmbeddings} embeddings, refreshed=${result.refreshed}");
+    } catch (e) {
+      setState(() => _status = "Pipeline failed: $e");
     }
   }
 
-  setState(() => _status = "Decrypted $successCount/${files.length} files");
-}
+  /// Ask a question against the embeddings in VectorStore
+  Future<void> _askQuestion() async {
+    final query = _chatController.text.trim();
+    if (query.isEmpty) return;
 
+    setState(() => _status = "Searching embeddings...");
 
-  /// Run pipeline (decrypt → chunk → embeddings → vector store)
-  Future<void> _runPipeline() async {
-    setState(() => _status = "Running pipeline...");
-    final pipeline =
-        Pipeline(aesKey32: List.filled(32, 1)); // dummy key, not used in init()
-    final result = await pipeline.run();
+    try {
+      final embeddings = await Embeddings.load();
+      final store = await VectorStore.open(embedSize: 384);
 
-    setState(() => _status =
-        "Pipeline done: ${result.totalChunks} chunks, refreshed=${result.refreshed}");
+      // embed single query as batch of size 1
+      final queryVec = embeddings.embedTexts([query])[0];
+      // Note: Embeddings class doesn't have a close() method
+
+      final results = await store.search(queryVec, topK: 3);
+      await store.close();
+
+      if (results.isEmpty) {
+        setState(() {
+          _chatResponse = "No relevant chunks found.";
+          _status = "Q&A done.";
+        });
+      } else {
+        final answer = results
+            .map((r) => "📄 ${r.text}\n(Similarity: ${r.similarity.toStringAsFixed(3)})")
+            .join("\n\n");
+        setState(() {
+          _chatResponse = answer;
+          _status = "Q&A done - found ${results.length} results.";
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _chatResponse = "Error during search: $e";
+        _status = "Q&A failed.";
+      });
+    }
   }
 
   /// Debug: list files in /enc_files
@@ -196,12 +191,9 @@ Future<void> _decryptAll() async {
     final dirPath = await _appDirPath();
     final dir = Directory(dirPath);
     final files = dir.listSync();
-
-    print("Files in $dirPath:");
     for (final f in files) {
       print(" - ${f.path}");
     }
-
     setState(() => _status = "Listed ${files.length} files (see console)");
   }
 
@@ -211,66 +203,82 @@ Future<void> _decryptAll() async {
       appBar: AppBar(title: const Text("File Encrypt/Decrypt + Embeddings")),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton.icon(
-              icon: const Icon(Icons.note_add),
-              label: const Text("Create Test File (hello)"),
-              onPressed: _createTestFile,
-            ),
-            const SizedBox(height: 12),
-            ElevatedButton.icon(
-              icon: const Icon(Icons.lock),
-              label: const Text("Encrypt All .txt Files"),
-              onPressed: _encryptAll,
-            ),
-            const SizedBox(height: 12),
-            ElevatedButton.icon(
-              icon: const Icon(Icons.lock_open),
-              label: const Text("Decrypt All .enc Files"),
-              onPressed: _decryptAll,
-            ),
-            const SizedBox(height: 12),
-            ElevatedButton.icon(
-              icon: const Icon(Icons.play_circle_fill),
-              label: const Text("Run Pipeline"),
-              onPressed: _runPipeline,
-            ),
-            const SizedBox(height: 24),
-            TextField(
-              controller: _chatController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: "Ask a question",
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              ElevatedButton.icon(
+                icon: const Icon(Icons.note_add),
+                label: const Text("Create Test File"),
+                onPressed: _createTestFile,
               ),
-            ),
-            const SizedBox(height: 12),
-            ElevatedButton.icon(
-              icon: const Icon(Icons.question_answer),
-              label: const Text("Ask"),
-              onPressed: _askQuestion,
-            ),
-            const SizedBox(height: 12),
-            Text(
-              _chatResponse,
-              style: const TextStyle(fontSize: 14),
-              textAlign: TextAlign.left,
-            ),
-
-            const SizedBox(height: 12),
-            ElevatedButton.icon(
-              icon: const Icon(Icons.list),
-              label: const Text("List Files in /enc_files"),
-              onPressed: _listFiles,
-            ),
-            const SizedBox(height: 30),
-            Text(
-              _status,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
-          ],
+              const SizedBox(height: 12),
+              ElevatedButton.icon(
+                icon: const Icon(Icons.lock),
+                label: const Text("Encrypt All .txt Files"),
+                onPressed: _encryptAll,
+              ),
+              const SizedBox(height: 12),
+              ElevatedButton.icon(
+                icon: const Icon(Icons.lock_open),
+                label: const Text("Decrypt All .enc Files"),
+                onPressed: _decryptAll,
+              ),
+              const SizedBox(height: 12),
+              ElevatedButton.icon(
+                icon: const Icon(Icons.play_circle_fill),
+                label: const Text("Run Pipeline"),
+                onPressed: _runPipeline,
+              ),
+              const SizedBox(height: 24),
+              TextField(
+                controller: _chatController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: "Ask a question",
+                  hintText: "e.g., 'What is artificial intelligence?'",
+                ),
+              ),
+              const SizedBox(height: 12),
+              ElevatedButton.icon(
+                icon: const Icon(Icons.question_answer),
+                label: const Text("Ask"),
+                onPressed: _askQuestion,
+              ),
+              const SizedBox(height: 12),
+              if (_chatResponse.isNotEmpty)
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    _chatResponse,
+                    style: const TextStyle(fontSize: 14),
+                  ),
+                ),
+              const SizedBox(height: 12),
+              ElevatedButton.icon(
+                icon: const Icon(Icons.list),
+                label: const Text("List Files in /enc_files"),
+                onPressed: _listFiles,
+              ),
+              const SizedBox(height: 30),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.blue.shade50,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  _status,
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

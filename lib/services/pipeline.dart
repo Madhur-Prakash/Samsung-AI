@@ -1,122 +1,139 @@
+// services/pipeline.dart
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-import 'crypto_service.dart';
-import 'embeddings.dart';
 import 'text_chunker.dart';
+import 'embeddings.dart';
 import 'vector_store.dart';
+import 'crypto_service.dart';
 
 class PipelineResult {
   final int totalChunks;
+  final int totalEmbeddings;
   final bool refreshed;
   final String message;
-  PipelineResult(this.totalChunks, this.refreshed, this.message);
+  
+  PipelineResult(this.totalChunks, this.totalEmbeddings, this.refreshed, this.message);
 }
 
 class Pipeline {
-  final String folderName;
-  final Duration maxAge;
   final List<int> aesKey32;
-
+  final TextChunker chunker;
+  
   Pipeline({
-    this.folderName = "enc_files",
-    this.maxAge = const Duration(days: 30),
     required this.aesKey32,
-  });
+    TextChunker? chunker,
+  }) : chunker = chunker ?? TextChunker();
+
+  Future<String> _getEncFilesDir() async {
+    final dir = await getApplicationDocumentsDirectory();
+    final encDir = Directory("${dir.path}/enc_files");
+    if (!await encDir.exists()) {
+      await encDir.create(recursive: true);
+    }
+    return encDir.path;
+  }
 
   Future<PipelineResult> run() async {
-    final baseDir = await getApplicationDocumentsDirectory();
-    final textDir = Directory('${baseDir.path}/$folderName');
+    try {
+      final dirPath = await _getEncFilesDir();
+      final dir = Directory(dirPath);
+      
+      // Step 1: Decrypt .enc files to .txt (temporarily)
+      final encFiles = dir
+          .listSync()
+          .where((e) => e is File && e.path.endsWith(".enc"))
+          .cast<File>()
+          .toList();
 
-    if (!await textDir.exists()) {
-      await textDir.create(recursive: true);
-      print("Directory created at: ${textDir.path}");
-    }
-
-    // Decrypt .enc → .txt
-    final crypto = CryptoService();
-    await crypto.loadKeyDecrypt(); // Load key for decryption, if exists
-    final decCount = await crypto.decryptDirectory(textDir.path);
-    print("Decrypted $decCount files in: ${textDir.path}");
-
-    final lines = await _readTxtFiles(textDir.path);
-    print("Collected ${lines.length} lines from text files");
-
-    if (lines.isEmpty) {
-      return PipelineResult(
-        0,
-        false,
-        decCount == 0
-            ? "No encrypted or text files found."
-            : "Decrypted files, but no valid lines.",
-      );
-    }
-
-    // Chunking
-    final chunker = TextChunker(chunkSize: 500, overlap: 100);
-    final chunks = chunker.chunkLines(lines);
-    print("Created ${chunks.length} text chunks");
-
-    if (chunks.isEmpty) return PipelineResult(0, false, "No chunks produced.");
-
-    // Embeddings
-    final embeddings = await Embeddings.load(
-      modelAsset: 'assets/models/sentence_transformer.tflite',
-      vocabAsset: 'assets/tokenizer/vocab.txt',
-      maxLen: 128,
-      embedSize: 384,
-    );
-
-    final store = await VectorStore.open(embedSize: 384);
-
-    bool refreshed = false;
-    final created = await store.createdTime();
-    if (created != null) {
-      final age = DateTime.now().difference(created);
-      if (age >= maxAge) {
-        await store.clear();
-        refreshed = true;
-        print("Vector store refreshed after $age");
+      if (encFiles.isEmpty) {
+        return PipelineResult(0, 0, false, "No .enc files found to process");
       }
+
+      final crypto = CryptoService();
+      await crypto.loadKeyDecrypt();
+
+      // Decrypt files temporarily
+      List<File> tempTxtFiles = [];
+      for (final encFile in encFiles) {
+        try {
+          await crypto.decryptFile(encFile); // This creates .txt and deletes .enc
+          final txtPath = encFile.path.replaceFirst(RegExp(r'\.enc$'), '.txt');
+          tempTxtFiles.add(File(txtPath));
+        } catch (e) {
+          print("❌ Failed to decrypt ${encFile.path}: $e");
+        }
+      }
+
+      // Step 2: Process text files into chunks
+      List<String> allChunks = [];
+      List<String> chunkSources = []; // Track which file each chunk came from
+      
+      for (var file in tempTxtFiles) {
+        final content = await file.readAsString();
+        final chunks = chunker.chunkText(content);
+        allChunks.addAll(chunks);
+        
+        // Track source file for each chunk
+        for (int i = 0; i < chunks.length; i++) {
+          chunkSources.add(file.path);
+        }
+      }
+
+      if (allChunks.isEmpty) {
+        return PipelineResult(0, 0, false, "No text content found in decrypted files");
+      }
+
+      print("📂 Collected ${allChunks.length} text chunks from ${tempTxtFiles.length} files");
+
+      // Step 3: Generate embeddings
+      final embeddings = await Embeddings.load();
+      final vectors = embeddings.embedTexts(allChunks);
+      // Note: Embeddings class doesn't have a close() method
+
+      print("✅ Generated ${vectors.length} embeddings");
+
+      // Step 4: Store in vector database
+      final vectorStore = await VectorStore.open(embedSize: 384);
+      
+      // Clear existing data for refresh
+      await vectorStore.clear();
+      
+      // Add all chunks and their embeddings
+      for (int i = 0; i < allChunks.length; i++) {
+        await vectorStore.add(
+          id: 'chunk_$i',
+          embedding: vectors[i],
+          text: allChunks[i],
+          metadata: {'source': chunkSources[i]},
+        );
+      }
+
+      await vectorStore.close();
+      print("💾 Stored ${vectors.length} embeddings in vector store");
+
+      // Step 5: Re-encrypt the files
+      await crypto.loadKeyEncrypt();
+      for (final txtFile in tempTxtFiles) {
+        try {
+          final encPath = txtFile.path.replaceFirst(RegExp(r'\.txt$'), '.enc');
+          await crypto.encryptFile(txtFile, encPath);
+          await txtFile.delete(); // Clean up temp file
+        } catch (e) {
+          print("❌ Failed to re-encrypt ${txtFile.path}: $e");
+        }
+      }
+
+      return PipelineResult(
+        allChunks.length, 
+        vectors.length, 
+        true, 
+        "Pipeline completed successfully"
+      );
+
+    } catch (e, stackTrace) {
+      print("❌ Pipeline failed: $e");
+      print("Stack trace: $stackTrace");
+      return PipelineResult(0, 0, false, "Pipeline failed: $e");
     }
-
-    final items = <({String text, List<double> vec})>[];
-    for (final c in chunks) {
-      final vec = embeddings.embed(c);
-      items.add((text: c, vec: vec));
-    }
-
-    await store.upsertBatch(items);
-    print("Upserted ${items.length} embeddings into vector store");
-
-    await _resetDir(textDir.path);
-    print("Reset directory: ${textDir.path}");
-
-    embeddings.close();
-    return PipelineResult(chunks.length, refreshed, "Embeddings stored successfully.");
-  }
-
-  Future<List<String>> _readTxtFiles(String dirPath) async {
-    final dir = Directory(dirPath);
-    if (!await dir.exists()) return [];
-    final files = await dir
-        .list()
-        .where((e) => e is File && e.path.endsWith('.txt'))
-        .cast<File>()
-        .toList();
-
-    final lines = <String>[];
-    for (final f in files) {
-      try {
-        final content = await f.readAsLines();
-        lines.addAll(content);
-      } catch (_) {}
-    }
-    return lines;
-  }
-
-  Future<void> _resetDir(String dirPath) async {
-    final dir = Directory(dirPath);
-    if (await dir.exists()) await dir.delete(recursive: true);
-    await Directory(dirPath).create(recursive: true);
   }
 }
