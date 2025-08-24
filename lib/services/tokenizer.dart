@@ -52,28 +52,38 @@ class BertTokenizer {
   }
 
   List<String> _wordpiece(String token) {
-    if (vocab.containsKey(token)) return [token];
-    final List<String> subTokens = [];
-    int start = 0;
+  if (vocab.containsKey(token)) return [token];
+  final List<String> subTokens = [];
+  int start = 0;
 
-    while (start < token.length) {
-      int end = token.length;
-      String curSubStr = "";
-      while (start < end) {
-        var substr = token.substring(start, end);
-        if (start > 0) substr = "##$substr";
-        if (vocab.containsKey(substr)) {
-          curSubStr = substr;
-          break;
-        }
-        end -= 1;
+  while (start < token.length) {
+    int end = token.length;
+    String curSubStr = "";
+    bool found = false;
+
+    while (start < end) {
+      var substr = token.substring(start, end);
+      if (start > 0) substr = "##$substr";
+      if (vocab.containsKey(substr)) {
+        curSubStr = substr;
+        found = true;
+        break;
       }
-      if (curSubStr.isEmpty) return [unkToken];
+      end -= 1;
+    }
+
+    if (!found || curSubStr.isEmpty) {
+      // Fallback: add UNK for this part and advance by 1 char to avoid infinite loop
+      subTokens.add(unkToken);
+      start += 1;  // Advance minimally
+    } else {
       subTokens.add(curSubStr);
       start = end;
     }
-    return subTokens;
   }
+  return subTokens;
+}
+
 }
 
 

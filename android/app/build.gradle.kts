@@ -5,6 +5,10 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+dependencies {
+    implementation("org.tensorflow:tensorflow-lite-select-tf-ops:2.16.1")
+}
+
 android {
     namespace = "com.example.samsung_ai"
     compileSdk = flutter.compileSdkVersion
@@ -27,6 +31,9 @@ android {
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
+        ndk {
+            abiFilters 'armeabi-v7a', 'arm64-v8a'
+        }
         versionName = flutter.versionName
     }
 
