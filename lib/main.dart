@@ -4,6 +4,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:samsung_ai/services/embeddings.dart';
 import 'package:samsung_ai/services/vector_store.dart';
+import 'package:flutter_gpt_tokenizer/flutter_gpt_tokenizer.dart';
 import 'services/crypto_service.dart';
 import 'services/pipeline.dart';
 
@@ -37,6 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String _chatResponse = "";
 
   late Interpreter _interpreter;
+  
 
   @override
   void initState() {
@@ -49,20 +51,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // ---------------------- Helper for GPT-2 ----------------------
-  List<int> tokenize(String text) {
-    // Simple byte-level tokenizer (mock, works for ASCII)
-    return text.codeUnits;
-  }
-
-  String detokenize(List<int> ids) {
-    // Convert byte IDs back to string
-    return String.fromCharCodes(ids.where((id) => id != 0));
-  }
+ 
 
   Future<String> generateAnswer(String prompt) async {
   // Tokenize input
-  final inputIds = tokenize(prompt);
-
+  final inputIds = prompt.codeUnits;  // List<int>
   // For TFLite, we need fixed input length, e.g., 128
   final inputLength = 128;
   final inputTensor = List.generate(inputLength, (i) => i < inputIds.length ? inputIds[i] : 0);
@@ -96,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
   // Detokenize output
-  return detokenize(predictedIds);
+  return String.fromCharCodes(predictedIds.where((id) => id != 0));
 }
 
   // ---------------------------------------------------------------
