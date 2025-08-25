@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-
+import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:samsung_ai/services/embeddings.dart';
 import 'package:samsung_ai/services/vector_store.dart';
 import 'services/crypto_service.dart';
@@ -36,6 +36,71 @@ class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _chatController = TextEditingController();
   String _chatResponse = "";
 
+  late Interpreter _interpreter;
+
+  @override
+  void initState() {
+    super.initState();
+    loadModel();
+  }
+
+  Future<void> loadModel() async {
+    _interpreter = await Interpreter.fromAsset('assets/models/distilgpt2.tflite');
+  }
+
+  // ---------------------- Helper for GPT-2 ----------------------
+  List<int> tokenize(String text) {
+    // Simple byte-level tokenizer (mock, works for ASCII)
+    return text.codeUnits;
+  }
+
+  String detokenize(List<int> ids) {
+    // Convert byte IDs back to string
+    return String.fromCharCodes(ids.where((id) => id != 0));
+  }
+
+  Future<String> generateAnswer(String prompt) async {
+  // Tokenize input
+  final inputIds = tokenize(prompt);
+
+  // For TFLite, we need fixed input length, e.g., 128
+  final inputLength = 128;
+  final inputTensor = List.generate(inputLength, (i) => i < inputIds.length ? inputIds[i] : 0);
+
+  // Output shape is [1, 128, 50257] (batch, sequence, vocab)
+  final outputTensor = List.generate(
+    1,
+    (_) => List.generate(
+      128,
+      (_) => List.filled(50257, 0.0),
+    ),
+  );
+
+  // Run TFLite model
+  _interpreter.run([inputTensor], outputTensor);
+
+  // Extract predicted token IDs using argmax on the vocab dimension
+  List<int> predictedIds = [];
+  for (int i = 0; i < 128; i++) {
+    List<double> logits = outputTensor[0][i];  // Correct: batch 0, position i
+    int maxIndex = 0;
+    double maxValue = logits[0];
+    for (int j = 1; j < logits.length; j++) {
+      if (logits[j] > maxValue) {
+        maxValue = logits[j];
+        maxIndex = j;
+      }
+    }
+    predictedIds.add(maxIndex);
+  }
+
+
+  // Detokenize output
+  return detokenize(predictedIds);
+}
+
+  // ---------------------------------------------------------------
+
   /// Always work inside /enc_files
   Future<String> _appDirPath() async {
     final dir = await getApplicationDocumentsDirectory();
@@ -51,7 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final dirPath = await _appDirPath();
     final timestamp = DateTime.now().millisecondsSinceEpoch;
     final file = File("$dirPath/sample_$timestamp.txt");
-    
+
     final sampleText = """
 This is a sample document about artificial intelligence and machine learning.
 AI has revolutionized many industries including healthcare, finance, and technology.
@@ -60,7 +125,7 @@ Natural language processing helps computers understand human language.
 Deep learning uses neural networks to solve complex problems.
 The future of AI looks very promising with many exciting developments ahead.
 """;
-    
+
     await file.writeAsString(sampleText, flush: true);
     setState(() => _status = "Created test file at ${file.path}");
   }
@@ -139,7 +204,7 @@ The future of AI looks very promising with many exciting developments ahead.
     try {
       final pipeline = Pipeline(aesKey32: List.filled(32, 1)); // dummy key for now
       final result = await pipeline.run();
-      setState(() => _status = 
+      setState(() => _status =
           "Pipeline done: ${result.totalChunks} chunks, ${result.totalEmbeddings} embeddings, refreshed=${result.refreshed}");
     } catch (e) {
       setState(() => _status = "Pipeline failed: $e");
@@ -157,10 +222,10 @@ The future of AI looks very promising with many exciting developments ahead.
       final embeddings = await Embeddings.load();
       final store = await VectorStore.open(embedSize: 384);
 
-      // embed single query as batch of size 1
+      // Embed single query
       final queryVec = embeddings.embedTexts([query])[0];
-      // Note: Embeddings class doesn't have a close() method
 
+      // Get top K results
       final results = await store.search(queryVec, topK: 3);
       await store.close();
 
@@ -170,13 +235,22 @@ The future of AI looks very promising with many exciting developments ahead.
           _status = "Q&A done.";
         });
       } else {
-        final answer = results
-            .map((r) => "📄 ${r.text}\n(Similarity: ${r.similarity.toStringAsFixed(3)})")
-            .join("\n\n");
-        setState(() {
-          _chatResponse = answer;
-          _status = "Q&A done - found ${results.length} results.";
-        });
+        // Combine chunks into context string
+        final context = results.map((r) => r.text).join("\n\n");
+
+        // Generate formatted answer using DistilGPT-2 TFLite
+        try {
+          final formattedAnswer = await generateAnswer(context);
+          setState(() {
+            _chatResponse = formattedAnswer;
+            _status = "Q&A done - formatted answer generated.";
+          });
+        } catch (e) {
+          setState(() {
+            _chatResponse = "Error generating answer: $e";
+            _status = "Q&A failed.";
+          });
+        }
       }
     } catch (e) {
       setState(() {

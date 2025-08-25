@@ -127,12 +127,8 @@ samsung_ai/
 │   └── settings.gradle.kts
 ├── assets
 │   ├── enc_files
-│   │   ├── ocr_2_20250820_232449.txt
-│   │   ├── ocr_2_20250820_232511.txt
-│   │   ├── ocr_2_20250820_232557.txt
-│   │   ├── ocr_2_20250820_232603.txt
-│   │   └── ocr_3_20250820_232610.txt
 │   ├── models
+│   │   ├── distilgpt2.tflite
 │   │   └── sentence_transformer.tflite
 │   └── tokenizer
 │       ├── special_tokens_map.json
@@ -250,6 +246,12 @@ samsung_ai/
 │   │   │       │       ├── get_application_id_test.dart
 │   │   │       │       └── path_provider_linux_test.dart
 │   │   │       └── tflite_flutter
+│   │   │           ├── .github
+│   │   │           │   └── workflows
+│   │   │           │       ├── README.md  # Project documentation
+│   │   │           │       └── flutter-ci.yml
+│   │   │           ├── .gitignore  # gitignore file for GitHub
+│   │   │           ├── .metadata
 │   │   │           ├── AUTHORS
 │   │   │           ├── CHANGELOG.md
 │   │   │           ├── CODE_OF_CONDUCT.md
@@ -258,6 +260,7 @@ samsung_ai/
 │   │   │           ├── README.md  # Project documentation
 │   │   │           ├── analysis_options.yaml
 │   │   │           ├── android
+│   │   │           │   ├── .gitignore  # gitignore file for GitHub
 │   │   │           │   ├── build.gradle
 │   │   │           │   ├── settings.gradle
 │   │   │           │   └── src
@@ -278,9 +281,12 @@ samsung_ai/
 │   │   │           │   └── tflite_flutter_cover.png
 │   │   │           ├── example
 │   │   │           │   ├── audio_classification
+│   │   │           │   │   ├── .gitignore  # gitignore file for GitHub
+│   │   │           │   │   ├── .metadata
 │   │   │           │   │   ├── README.md  # Project documentation
 │   │   │           │   │   ├── analysis_options.yaml
 │   │   │           │   │   ├── android
+│   │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
 │   │   │           │   │   │   ├── app
 │   │   │           │   │   │   │   ├── build.gradle
 │   │   │           │   │   │   │   └── src
@@ -322,12 +328,17 @@ samsung_ai/
 │   │   │           │   │   │   ├── gradle.properties
 │   │   │           │   │   │   └── settings.gradle
 │   │   │           │   │   ├── assets
-│   │   │           │   │   │   └── images
-│   │   │           │   │   │       ├── logo.png
-│   │   │           │   │   │       └── tfl_logo.png
+│   │   │           │   │   │   ├── images
+│   │   │           │   │   │   │   ├── logo.png
+│   │   │           │   │   │   │   └── tfl_logo.png
+│   │   │           │   │   │   └── models
+│   │   │           │   │   │       ├── README.md  # Project documentation
+│   │   │           │   │   │       ├── yamnet.tflite
+│   │   │           │   │   │       └── yamnet_label_list.txt
 │   │   │           │   │   ├── blobs
 │   │   │           │   │   │   └── .gitkeep
 │   │   │           │   │   ├── ios
+│   │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
 │   │   │           │   │   │   ├── Flutter
 │   │   │           │   │   │   │   ├── AppFrameworkInfo.plist
 │   │   │           │   │   │   │   ├── Debug.xcconfig
@@ -386,6 +397,7 @@ samsung_ai/
 │   │   │           │   │   │   │   └── audio_classification_helper.dart
 │   │   │           │   │   │   └── main.dart
 │   │   │           │   │   ├── linux
+│   │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
 │   │   │           │   │   │   ├── CMakeLists.txt
 │   │   │           │   │   │   ├── flutter
 │   │   │           │   │   │   │   ├── CMakeLists.txt
@@ -396,6 +408,7 @@ samsung_ai/
 │   │   │           │   │   │   ├── my_application.cc
 │   │   │           │   │   │   └── my_application.h
 │   │   │           │   │   ├── macos
+│   │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
 │   │   │           │   │   │   ├── Flutter
 │   │   │           │   │   │   │   ├── Flutter-Debug.xcconfig
 │   │   │           │   │   │   │   └── Flutter-Release.xcconfig
@@ -446,6 +459,7 @@ samsung_ai/
 │   │   │           │   │   ├── test
 │   │   │           │   │   │   └── widget_test.dart
 │   │   │           │   │   └── windows
+│   │   │           │   │       ├── .gitignore  # gitignore file for GitHub
 │   │   │           │   │       ├── CMakeLists.txt
 │   │   │           │   │       ├── flutter
 │   │   │           │   │       │   ├── CMakeLists.txt
@@ -467,9 +481,12 @@ samsung_ai/
 │   │   │           │   │           ├── win32_window.cpp
 │   │   │           │   │           └── win32_window.h
 │   │   │           │   ├── bertqa
+│   │   │           │   │   ├── .gitignore  # gitignore file for GitHub
+│   │   │           │   │   ├── .metadata
 │   │   │           │   │   ├── README.md  # Project documentation
 │   │   │           │   │   ├── analysis_options.yaml
 │   │   │           │   │   ├── android
+│   │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
 │   │   │           │   │   │   ├── app
 │   │   │           │   │   │   │   ├── build.gradle
 │   │   │           │   │   │   │   └── src
@@ -511,9 +528,11 @@ samsung_ai/
 │   │   │           │   │   │   ├── gradle.properties
 │   │   │           │   │   │   └── settings.gradle
 │   │   │           │   │   ├── assets
+│   │   │           │   │   │   ├── .gitkeep
 │   │   │           │   │   │   └── images
 │   │   │           │   │   │       └── banner_lite.png
 │   │   │           │   │   ├── ios
+│   │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
 │   │   │           │   │   │   ├── Flutter
 │   │   │           │   │   │   │   ├── AppFrameworkInfo.plist
 │   │   │           │   │   │   │   ├── Debug.xcconfig
@@ -588,9 +607,12 @@ samsung_ai/
 │   │   │           │   │   └── test
 │   │   │           │   │       └── tokenizer_test.dart
 │   │   │           │   ├── digit_classification
+│   │   │           │   │   ├── .gitignore  # gitignore file for GitHub
+│   │   │           │   │   ├── .metadata
 │   │   │           │   │   ├── README.md  # Project documentation
 │   │   │           │   │   ├── analysis_options.yaml
 │   │   │           │   │   ├── android
+│   │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
 │   │   │           │   │   │   ├── app
 │   │   │           │   │   │   │   ├── build.gradle
 │   │   │           │   │   │   │   └── src
@@ -632,9 +654,11 @@ samsung_ai/
 │   │   │           │   │   │   ├── gradle.properties
 │   │   │           │   │   │   └── settings.gradle
 │   │   │           │   │   ├── assets
+│   │   │           │   │   │   ├── .gitkeep
 │   │   │           │   │   │   └── images
 │   │   │           │   │   │       └── tfl_logo.png
 │   │   │           │   │   ├── ios
+│   │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
 │   │   │           │   │   │   ├── Flutter
 │   │   │           │   │   │   │   ├── AppFrameworkInfo.plist
 │   │   │           │   │   │   │   ├── Debug.xcconfig
@@ -703,6 +727,7 @@ samsung_ai/
 │   │   │           │   │   ├── README.md  # Project documentation
 │   │   │           │   │   ├── analysis_options.yaml
 │   │   │           │   │   ├── android
+│   │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
 │   │   │           │   │   │   ├── app
 │   │   │           │   │   │   │   ├── build.gradle
 │   │   │           │   │   │   │   └── src
@@ -743,9 +768,11 @@ samsung_ai/
 │   │   │           │   │   │   ├── gradle.properties
 │   │   │           │   │   │   └── settings.gradle
 │   │   │           │   │   ├── assets
+│   │   │           │   │   │   ├── .gitkeep
 │   │   │           │   │   │   └── images
 │   │   │           │   │   │       └── tfl_logo.png
 │   │   │           │   │   ├── ios
+│   │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
 │   │   │           │   │   │   ├── Flutter
 │   │   │           │   │   │   │   ├── AppFrameworkInfo.plist
 │   │   │           │   │   │   │   ├── Debug.xcconfig
@@ -813,9 +840,12 @@ samsung_ai/
 │   │   │           │   │   └── scripts
 │   │   │           │   │       └── download_model.sh
 │   │   │           │   ├── image_classification_mobilenet
+│   │   │           │   │   ├── .gitignore  # gitignore file for GitHub
+│   │   │           │   │   ├── .metadata
 │   │   │           │   │   ├── README.md  # Project documentation
 │   │   │           │   │   ├── analysis_options.yaml
 │   │   │           │   │   ├── android
+│   │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
 │   │   │           │   │   │   ├── app
 │   │   │           │   │   │   │   ├── build.gradle
 │   │   │           │   │   │   │   └── src
@@ -856,12 +886,17 @@ samsung_ai/
 │   │   │           │   │   │   ├── gradle.properties
 │   │   │           │   │   │   └── settings.gradle
 │   │   │           │   │   ├── assets
-│   │   │           │   │   │   └── images
-│   │   │           │   │   │       ├── logo.png
-│   │   │           │   │   │       └── tfl_logo.png
+│   │   │           │   │   │   ├── images
+│   │   │           │   │   │   │   ├── logo.png
+│   │   │           │   │   │   │   └── tfl_logo.png
+│   │   │           │   │   │   └── models
+│   │   │           │   │   │       ├── README.md  # Project documentation
+│   │   │           │   │   │       ├── labels.txt
+│   │   │           │   │   │       └── mobilenet_quant.tflite
 │   │   │           │   │   ├── blobs
 │   │   │           │   │   │   └── .gitkeep
 │   │   │           │   │   ├── ios
+│   │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
 │   │   │           │   │   │   ├── Flutter
 │   │   │           │   │   │   │   ├── AppFrameworkInfo.plist
 │   │   │           │   │   │   │   ├── Debug.xcconfig
@@ -931,6 +966,7 @@ samsung_ai/
 │   │   │           │   │   │       ├── camera.dart
 │   │   │           │   │   │       └── gallery.dart
 │   │   │           │   │   ├── linux
+│   │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
 │   │   │           │   │   │   ├── CMakeLists.txt
 │   │   │           │   │   │   ├── flutter
 │   │   │           │   │   │   │   ├── CMakeLists.txt
@@ -941,6 +977,7 @@ samsung_ai/
 │   │   │           │   │   │   ├── my_application.cc
 │   │   │           │   │   │   └── my_application.h
 │   │   │           │   │   ├── macos
+│   │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
 │   │   │           │   │   │   ├── Flutter
 │   │   │           │   │   │   │   ├── Flutter-Debug.xcconfig
 │   │   │           │   │   │   │   └── Flutter-Release.xcconfig
@@ -992,6 +1029,7 @@ samsung_ai/
 │   │   │           │   │   ├── test
 │   │   │           │   │   │   └── widget_test.dart
 │   │   │           │   │   └── windows
+│   │   │           │   │       ├── .gitignore  # gitignore file for GitHub
 │   │   │           │   │       ├── CMakeLists.txt
 │   │   │           │   │       ├── flutter
 │   │   │           │   │       │   ├── CMakeLists.txt
@@ -1013,9 +1051,12 @@ samsung_ai/
 │   │   │           │   │           ├── win32_window.cpp
 │   │   │           │   │           └── win32_window.h
 │   │   │           │   ├── image_segmentation
+│   │   │           │   │   ├── .gitignore  # gitignore file for GitHub
+│   │   │           │   │   ├── .metadata
 │   │   │           │   │   ├── README.md  # Project documentation
 │   │   │           │   │   ├── analysis_options.yaml
 │   │   │           │   │   ├── android
+│   │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
 │   │   │           │   │   │   ├── app
 │   │   │           │   │   │   │   ├── build.gradle
 │   │   │           │   │   │   │   └── src
@@ -1056,9 +1097,11 @@ samsung_ai/
 │   │   │           │   │   │   ├── gradle.properties
 │   │   │           │   │   │   └── settings.gradle
 │   │   │           │   │   ├── assets
+│   │   │           │   │   │   ├── .gitkeep
 │   │   │           │   │   │   └── images
 │   │   │           │   │   │       └── tfl_logo.png
 │   │   │           │   │   ├── ios
+│   │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
 │   │   │           │   │   │   ├── Flutter
 │   │   │           │   │   │   │   ├── AppFrameworkInfo.plist
 │   │   │           │   │   │   │   ├── Debug.xcconfig
@@ -1125,9 +1168,12 @@ samsung_ai/
 │   │   │           │   │   └── scripts
 │   │   │           │   │       └── download_models.sh
 │   │   │           │   ├── live_object_detection_ssd_mobilenet
+│   │   │           │   │   ├── .gitignore  # gitignore file for GitHub
+│   │   │           │   │   ├── .metadata
 │   │   │           │   │   ├── README.md  # Project documentation
 │   │   │           │   │   ├── analysis_options.yaml
 │   │   │           │   │   ├── android
+│   │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
 │   │   │           │   │   │   ├── app
 │   │   │           │   │   │   │   ├── build.gradle
 │   │   │           │   │   │   │   └── src
@@ -1168,11 +1214,14 @@ samsung_ai/
 │   │   │           │   │   │   ├── gradle.properties
 │   │   │           │   │   │   └── settings.gradle
 │   │   │           │   │   ├── assets
-│   │   │           │   │   │   └── images
-│   │   │           │   │   │       └── tfl_logo.png
+│   │   │           │   │   │   ├── images
+│   │   │           │   │   │   │   └── tfl_logo.png
+│   │   │           │   │   │   └── models
+│   │   │           │   │   │       └── README.md  # Project documentation
 │   │   │           │   │   ├── blobs
 │   │   │           │   │   │   └── .gitkeep
 │   │   │           │   │   ├── ios
+│   │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
 │   │   │           │   │   │   ├── Flutter
 │   │   │           │   │   │   │   ├── AppFrameworkInfo.plist
 │   │   │           │   │   │   │   ├── Debug.xcconfig
@@ -1241,6 +1290,7 @@ samsung_ai/
 │   │   │           │   │   │   └── utils
 │   │   │           │   │   │       └── image_utils.dart
 │   │   │           │   │   ├── linux
+│   │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
 │   │   │           │   │   │   ├── CMakeLists.txt
 │   │   │           │   │   │   ├── flutter
 │   │   │           │   │   │   │   ├── CMakeLists.txt
@@ -1259,6 +1309,7 @@ samsung_ai/
 │   │   │           │   │   ├── test
 │   │   │           │   │   │   └── widget_test.dart
 │   │   │           │   │   └── windows
+│   │   │           │   │       ├── .gitignore  # gitignore file for GitHub
 │   │   │           │   │       ├── CMakeLists.txt
 │   │   │           │   │       ├── flutter
 │   │   │           │   │       │   ├── CMakeLists.txt
@@ -1280,9 +1331,12 @@ samsung_ai/
 │   │   │           │   │           ├── win32_window.cpp
 │   │   │           │   │           └── win32_window.h
 │   │   │           │   ├── object_detection_ssd_mobilenet
+│   │   │           │   │   ├── .gitignore  # gitignore file for GitHub
+│   │   │           │   │   ├── .metadata
 │   │   │           │   │   ├── README.md  # Project documentation
 │   │   │           │   │   ├── analysis_options.yaml
 │   │   │           │   │   ├── android
+│   │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
 │   │   │           │   │   │   ├── app
 │   │   │           │   │   │   │   ├── build.gradle
 │   │   │           │   │   │   │   └── src
@@ -1323,11 +1377,14 @@ samsung_ai/
 │   │   │           │   │   │   ├── gradle.properties
 │   │   │           │   │   │   └── settings.gradle
 │   │   │           │   │   ├── assets
-│   │   │           │   │   │   └── images
-│   │   │           │   │   │       └── tfl_logo.png
+│   │   │           │   │   │   ├── images
+│   │   │           │   │   │   │   └── tfl_logo.png
+│   │   │           │   │   │   └── models
+│   │   │           │   │   │       └── README.md  # Project documentation
 │   │   │           │   │   ├── blobs
 │   │   │           │   │   │   └── .gitkeep
 │   │   │           │   │   ├── ios
+│   │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
 │   │   │           │   │   │   ├── Flutter
 │   │   │           │   │   │   │   ├── AppFrameworkInfo.plist
 │   │   │           │   │   │   │   ├── Debug.xcconfig
@@ -1385,6 +1442,7 @@ samsung_ai/
 │   │   │           │   │   │   ├── main.dart
 │   │   │           │   │   │   └── object_detection.dart
 │   │   │           │   │   ├── linux
+│   │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
 │   │   │           │   │   │   ├── CMakeLists.txt
 │   │   │           │   │   │   ├── flutter
 │   │   │           │   │   │   │   ├── CMakeLists.txt
@@ -1395,6 +1453,7 @@ samsung_ai/
 │   │   │           │   │   │   ├── my_application.cc
 │   │   │           │   │   │   └── my_application.h
 │   │   │           │   │   ├── macos
+│   │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
 │   │   │           │   │   │   ├── Flutter
 │   │   │           │   │   │   │   ├── Flutter-Debug.xcconfig
 │   │   │           │   │   │   │   └── Flutter-Release.xcconfig
@@ -1443,6 +1502,201 @@ samsung_ai/
 │   │   │           │   │   ├── test
 │   │   │           │   │   │   └── widget_test.dart
 │   │   │           │   │   └── windows
+│   │   │           │   │       ├── .gitignore  # gitignore file for GitHub
+│   │   │           │   │       ├── CMakeLists.txt
+│   │   │           │   │       ├── flutter
+│   │   │           │   │       │   ├── CMakeLists.txt
+│   │   │           │   │       │   ├── generated_plugin_registrant.cc
+│   │   │           │   │       │   ├── generated_plugin_registrant.h
+│   │   │           │   │       │   └── generated_plugins.cmake
+│   │   │           │   │       └── runner
+│   │   │           │   │           ├── CMakeLists.txt
+│   │   │           │   │           ├── Runner.rc
+│   │   │           │   │           ├── flutter_window.cpp
+│   │   │           │   │           ├── flutter_window.h
+│   │   │           │   │           ├── main.cpp
+│   │   │           │   │           ├── resource.h
+│   │   │           │   │           ├── resources
+│   │   │           │   │           │   └── app_icon.ico
+│   │   │           │   │           ├── runner.exe.manifest
+│   │   │           │   │           ├── utils.cpp
+│   │   │           │   │           ├── utils.h
+│   │   │           │   │           ├── win32_window.cpp
+│   │   │           │   │           └── win32_window.h
+│   │   │           │   ├── object_detection_ssd_mobilenet_v2
+│   │   │           │   │   ├── .gitignore  # gitignore file for GitHub
+│   │   │           │   │   ├── .metadata
+│   │   │           │   │   ├── README.md  # Project documentation
+│   │   │           │   │   ├── analysis_options.yaml
+│   │   │           │   │   ├── android
+│   │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
+│   │   │           │   │   │   ├── app
+│   │   │           │   │   │   │   ├── build.gradle
+│   │   │           │   │   │   │   └── src
+│   │   │           │   │   │   │       ├── debug
+│   │   │           │   │   │   │       │   └── AndroidManifest.xml
+│   │   │           │   │   │   │       ├── main
+│   │   │           │   │   │   │       │   ├── AndroidManifest.xml
+│   │   │           │   │   │   │       │   ├── kotlin
+│   │   │           │   │   │   │       │   │   └── com
+│   │   │           │   │   │   │       │   │       └── example
+│   │   │           │   │   │   │       │   │           └── object_detection_ssd_mobilenet
+│   │   │           │   │   │   │       │   │               └── MainActivity.kt
+│   │   │           │   │   │   │       │   └── res
+│   │   │           │   │   │   │       │       ├── drawable
+│   │   │           │   │   │   │       │       │   └── launch_background.xml
+│   │   │           │   │   │   │       │       ├── drawable-v21
+│   │   │           │   │   │   │       │       │   └── launch_background.xml
+│   │   │           │   │   │   │       │       ├── mipmap-hdpi
+│   │   │           │   │   │   │       │       │   └── ic_launcher.png
+│   │   │           │   │   │   │       │       ├── mipmap-mdpi
+│   │   │           │   │   │   │       │       │   └── ic_launcher.png
+│   │   │           │   │   │   │       │       ├── mipmap-xhdpi
+│   │   │           │   │   │   │       │       │   └── ic_launcher.png
+│   │   │           │   │   │   │       │       ├── mipmap-xxhdpi
+│   │   │           │   │   │   │       │       │   └── ic_launcher.png
+│   │   │           │   │   │   │       │       ├── mipmap-xxxhdpi
+│   │   │           │   │   │   │       │       │   └── ic_launcher.png
+│   │   │           │   │   │   │       │       ├── values
+│   │   │           │   │   │   │       │       │   └── styles.xml
+│   │   │           │   │   │   │       │       └── values-night
+│   │   │           │   │   │   │       │           └── styles.xml
+│   │   │           │   │   │   │       └── profile
+│   │   │           │   │   │   │           └── AndroidManifest.xml
+│   │   │           │   │   │   ├── build.gradle
+│   │   │           │   │   │   ├── gradle
+│   │   │           │   │   │   │   └── wrapper
+│   │   │           │   │   │   │       └── gradle-wrapper.properties
+│   │   │           │   │   │   ├── gradle.properties
+│   │   │           │   │   │   └── settings.gradle
+│   │   │           │   │   ├── assets
+│   │   │           │   │   │   ├── custom_ssd_mobilenet_v2.tflite
+│   │   │           │   │   │   ├── custom_ssd_mobilenet_v2_fpn_lite_320x320.tflite
+│   │   │           │   │   │   ├── images
+│   │   │           │   │   │   │   └── tfl_logo.png
+│   │   │           │   │   │   └── labels.txt
+│   │   │           │   │   ├── blobs
+│   │   │           │   │   │   └── .gitkeep
+│   │   │           │   │   ├── ios
+│   │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
+│   │   │           │   │   │   ├── Flutter
+│   │   │           │   │   │   │   ├── AppFrameworkInfo.plist
+│   │   │           │   │   │   │   ├── Debug.xcconfig
+│   │   │           │   │   │   │   └── Release.xcconfig
+│   │   │           │   │   │   ├── Podfile
+│   │   │           │   │   │   ├── Runner
+│   │   │           │   │   │   │   ├── AppDelegate.swift
+│   │   │           │   │   │   │   ├── Assets.xcassets
+│   │   │           │   │   │   │   │   ├── AppIcon.appiconset
+│   │   │           │   │   │   │   │   │   ├── Contents.json
+│   │   │           │   │   │   │   │   │   ├── Icon-App-1024x1024@1x.png
+│   │   │           │   │   │   │   │   │   ├── Icon-App-20x20@1x.png
+│   │   │           │   │   │   │   │   │   ├── Icon-App-20x20@2x.png
+│   │   │           │   │   │   │   │   │   ├── Icon-App-20x20@3x.png
+│   │   │           │   │   │   │   │   │   ├── Icon-App-29x29@1x.png
+│   │   │           │   │   │   │   │   │   ├── Icon-App-29x29@2x.png
+│   │   │           │   │   │   │   │   │   ├── Icon-App-29x29@3x.png
+│   │   │           │   │   │   │   │   │   ├── Icon-App-40x40@1x.png
+│   │   │           │   │   │   │   │   │   ├── Icon-App-40x40@2x.png
+│   │   │           │   │   │   │   │   │   ├── Icon-App-40x40@3x.png
+│   │   │           │   │   │   │   │   │   ├── Icon-App-60x60@2x.png
+│   │   │           │   │   │   │   │   │   ├── Icon-App-60x60@3x.png
+│   │   │           │   │   │   │   │   │   ├── Icon-App-76x76@1x.png
+│   │   │           │   │   │   │   │   │   ├── Icon-App-76x76@2x.png
+│   │   │           │   │   │   │   │   │   └── Icon-App-83.5x83.5@2x.png
+│   │   │           │   │   │   │   │   └── LaunchImage.imageset
+│   │   │           │   │   │   │   │       ├── Contents.json
+│   │   │           │   │   │   │   │       ├── LaunchImage.png
+│   │   │           │   │   │   │   │       ├── LaunchImage@2x.png
+│   │   │           │   │   │   │   │       ├── LaunchImage@3x.png
+│   │   │           │   │   │   │   │       └── README.md  # Project documentation
+│   │   │           │   │   │   │   ├── Base.lproj
+│   │   │           │   │   │   │   │   ├── LaunchScreen.storyboard
+│   │   │           │   │   │   │   │   └── Main.storyboard
+│   │   │           │   │   │   │   ├── Info.plist
+│   │   │           │   │   │   │   └── Runner-Bridging-Header.h
+│   │   │           │   │   │   ├── Runner.xcodeproj
+│   │   │           │   │   │   │   ├── project.pbxproj
+│   │   │           │   │   │   │   ├── project.xcworkspace
+│   │   │           │   │   │   │   │   ├── contents.xcworkspacedata
+│   │   │           │   │   │   │   │   └── xcshareddata
+│   │   │           │   │   │   │   │       ├── IDEWorkspaceChecks.plist
+│   │   │           │   │   │   │   │       └── WorkspaceSettings.xcsettings
+│   │   │           │   │   │   │   └── xcshareddata
+│   │   │           │   │   │   │       └── xcschemes
+│   │   │           │   │   │   │           └── Runner.xcscheme
+│   │   │           │   │   │   ├── Runner.xcworkspace
+│   │   │           │   │   │   │   ├── contents.xcworkspacedata
+│   │   │           │   │   │   │   └── xcshareddata
+│   │   │           │   │   │   │       ├── IDEWorkspaceChecks.plist
+│   │   │           │   │   │   │       └── WorkspaceSettings.xcsettings
+│   │   │           │   │   │   └── RunnerTests
+│   │   │           │   │   │       └── RunnerTests.swift
+│   │   │           │   │   ├── lib
+│   │   │           │   │   │   ├── main.dart
+│   │   │           │   │   │   └── object_detection.dart
+│   │   │           │   │   ├── linux
+│   │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
+│   │   │           │   │   │   ├── CMakeLists.txt
+│   │   │           │   │   │   ├── flutter
+│   │   │           │   │   │   │   ├── CMakeLists.txt
+│   │   │           │   │   │   │   ├── generated_plugin_registrant.cc
+│   │   │           │   │   │   │   ├── generated_plugin_registrant.h
+│   │   │           │   │   │   │   └── generated_plugins.cmake
+│   │   │           │   │   │   ├── main.cc
+│   │   │           │   │   │   ├── my_application.cc
+│   │   │           │   │   │   └── my_application.h
+│   │   │           │   │   ├── macos
+│   │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
+│   │   │           │   │   │   ├── Flutter
+│   │   │           │   │   │   │   ├── Flutter-Debug.xcconfig
+│   │   │           │   │   │   │   └── Flutter-Release.xcconfig
+│   │   │           │   │   │   ├── Podfile
+│   │   │           │   │   │   ├── Runner
+│   │   │           │   │   │   │   ├── AppDelegate.swift
+│   │   │           │   │   │   │   ├── Assets.xcassets
+│   │   │           │   │   │   │   │   └── AppIcon.appiconset
+│   │   │           │   │   │   │   │       ├── Contents.json
+│   │   │           │   │   │   │   │       ├── app_icon_1024.png
+│   │   │           │   │   │   │   │       ├── app_icon_128.png
+│   │   │           │   │   │   │   │       ├── app_icon_16.png
+│   │   │           │   │   │   │   │       ├── app_icon_256.png
+│   │   │           │   │   │   │   │       ├── app_icon_32.png
+│   │   │           │   │   │   │   │       ├── app_icon_512.png
+│   │   │           │   │   │   │   │       └── app_icon_64.png
+│   │   │           │   │   │   │   ├── Base.lproj
+│   │   │           │   │   │   │   │   └── MainMenu.xib
+│   │   │           │   │   │   │   ├── Configs
+│   │   │           │   │   │   │   │   ├── AppInfo.xcconfig
+│   │   │           │   │   │   │   │   ├── Debug.xcconfig
+│   │   │           │   │   │   │   │   ├── Release.xcconfig
+│   │   │           │   │   │   │   │   └── Warnings.xcconfig
+│   │   │           │   │   │   │   ├── DebugProfile.entitlements
+│   │   │           │   │   │   │   ├── Info.plist
+│   │   │           │   │   │   │   ├── MainFlutterWindow.swift
+│   │   │           │   │   │   │   └── Release.entitlements
+│   │   │           │   │   │   ├── Runner.xcodeproj
+│   │   │           │   │   │   │   ├── project.pbxproj
+│   │   │           │   │   │   │   ├── project.xcworkspace
+│   │   │           │   │   │   │   │   └── xcshareddata
+│   │   │           │   │   │   │   │       └── IDEWorkspaceChecks.plist
+│   │   │           │   │   │   │   └── xcshareddata
+│   │   │           │   │   │   │       └── xcschemes
+│   │   │           │   │   │   │           └── Runner.xcscheme
+│   │   │           │   │   │   ├── Runner.xcworkspace
+│   │   │           │   │   │   │   ├── contents.xcworkspacedata
+│   │   │           │   │   │   │   └── xcshareddata
+│   │   │           │   │   │   │       └── IDEWorkspaceChecks.plist
+│   │   │           │   │   │   └── RunnerTests
+│   │   │           │   │   │       └── RunnerTests.swift
+│   │   │           │   │   ├── pubspec.yaml
+│   │   │           │   │   ├── screenshot.png
+│   │   │           │   │   ├── scripts
+│   │   │           │   │   │   └── download_model.sh
+│   │   │           │   │   ├── test
+│   │   │           │   │   │   └── widget_test.dart
+│   │   │           │   │   └── windows
+│   │   │           │   │       ├── .gitignore  # gitignore file for GitHub
 │   │   │           │   │       ├── CMakeLists.txt
 │   │   │           │   │       ├── flutter
 │   │   │           │   │       │   ├── CMakeLists.txt
@@ -1464,9 +1718,12 @@ samsung_ai/
 │   │   │           │   │           ├── win32_window.cpp
 │   │   │           │   │           └── win32_window.h
 │   │   │           │   ├── pose_estimation
+│   │   │           │   │   ├── .gitignore  # gitignore file for GitHub
+│   │   │           │   │   ├── .metadata
 │   │   │           │   │   ├── README.md  # Project documentation
 │   │   │           │   │   ├── analysis_options.yaml
 │   │   │           │   │   ├── android
+│   │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
 │   │   │           │   │   │   ├── app
 │   │   │           │   │   │   │   ├── build.gradle
 │   │   │           │   │   │   │   └── src
@@ -1510,6 +1767,7 @@ samsung_ai/
 │   │   │           │   │   │   └── images
 │   │   │           │   │   │       └── tfl_logo.png
 │   │   │           │   │   ├── ios
+│   │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
 │   │   │           │   │   │   ├── Flutter
 │   │   │           │   │   │   │   ├── AppFrameworkInfo.plist
 │   │   │           │   │   │   │   ├── Debug.xcconfig
@@ -1582,6 +1840,7 @@ samsung_ai/
 │   │   │           │   ├── reinforcement_learning
 │   │   │           │   │   ├── README.md  # Project documentation
 │   │   │           │   │   ├── android
+│   │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
 │   │   │           │   │   │   ├── app
 │   │   │           │   │   │   │   ├── build.gradle
 │   │   │           │   │   │   │   └── src
@@ -1622,8 +1881,12 @@ samsung_ai/
 │   │   │           │   │   │   │       └── gradle-wrapper.properties
 │   │   │           │   │   │   ├── gradle.properties
 │   │   │           │   │   │   └── settings.gradle
+│   │   │           │   │   ├── assets
+│   │   │           │   │   │   └── models
+│   │   │           │   │   │       └── README.md  # Project documentation
 │   │   │           │   │   ├── demo.gif
 │   │   │           │   │   ├── ios
+│   │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
 │   │   │           │   │   │   ├── Flutter
 │   │   │           │   │   │   │   ├── AppFrameworkInfo.plist
 │   │   │           │   │   │   │   ├── Debug.xcconfig
@@ -1680,9 +1943,12 @@ samsung_ai/
 │   │   │           │   │   └── test_driver
 │   │   │           │   │       └── integration_test.dart
 │   │   │           │   ├── style_transfer
+│   │   │           │   │   ├── .gitignore  # gitignore file for GitHub
+│   │   │           │   │   ├── .metadata
 │   │   │           │   │   ├── README.md  # Project documentation
 │   │   │           │   │   ├── analysis_options.yaml
 │   │   │           │   │   ├── android
+│   │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
 │   │   │           │   │   │   ├── app
 │   │   │           │   │   │   │   ├── build.gradle
 │   │   │           │   │   │   │   └── src
@@ -1726,6 +1992,8 @@ samsung_ai/
 │   │   │           │   │   │   ├── images
 │   │   │           │   │   │   │   ├── logo.png
 │   │   │           │   │   │   │   └── tfl_logo.png
+│   │   │           │   │   │   ├── models
+│   │   │           │   │   │   │   └── README.md  # Project documentation
 │   │   │           │   │   │   └── styles
 │   │   │           │   │   │       ├── style0.jpg
 │   │   │           │   │   │       ├── style1.jpg
@@ -1756,6 +2024,7 @@ samsung_ai/
 │   │   │           │   │   ├── blobs
 │   │   │           │   │   │   └── .gitkeep
 │   │   │           │   │   ├── ios
+│   │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
 │   │   │           │   │   │   ├── Flutter
 │   │   │           │   │   │   │   ├── AppFrameworkInfo.plist
 │   │   │           │   │   │   │   ├── Debug.xcconfig
@@ -1818,6 +2087,7 @@ samsung_ai/
 │   │   │           │   │   ├── lib
 │   │   │           │   │   │   └── main.dart
 │   │   │           │   │   ├── linux
+│   │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
 │   │   │           │   │   │   ├── CMakeLists.txt
 │   │   │           │   │   │   ├── flutter
 │   │   │           │   │   │   │   ├── CMakeLists.txt
@@ -1828,6 +2098,7 @@ samsung_ai/
 │   │   │           │   │   │   ├── my_application.cc
 │   │   │           │   │   │   └── my_application.h
 │   │   │           │   │   ├── macos
+│   │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
 │   │   │           │   │   │   ├── Flutter
 │   │   │           │   │   │   │   ├── Flutter-Debug.xcconfig
 │   │   │           │   │   │   │   └── Flutter-Release.xcconfig
@@ -1876,6 +2147,7 @@ samsung_ai/
 │   │   │           │   │   ├── test
 │   │   │           │   │   │   └── widget_test.dart
 │   │   │           │   │   └── windows
+│   │   │           │   │       ├── .gitignore  # gitignore file for GitHub
 │   │   │           │   │       ├── CMakeLists.txt
 │   │   │           │   │       ├── flutter
 │   │   │           │   │       │   ├── CMakeLists.txt
@@ -1897,9 +2169,12 @@ samsung_ai/
 │   │   │           │   │           ├── win32_window.cpp
 │   │   │           │   │           └── win32_window.h
 │   │   │           │   ├── super_resolution_esrgan
+│   │   │           │   │   ├── .gitignore  # gitignore file for GitHub
+│   │   │           │   │   ├── .metadata
 │   │   │           │   │   ├── README.md  # Project documentation
 │   │   │           │   │   ├── analysis_options.yaml
 │   │   │           │   │   ├── android
+│   │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
 │   │   │           │   │   │   ├── app
 │   │   │           │   │   │   │   ├── build.gradle
 │   │   │           │   │   │   │   └── src
@@ -1943,13 +2218,16 @@ samsung_ai/
 │   │   │           │   │   │   ├── images
 │   │   │           │   │   │   │   ├── logo.png
 │   │   │           │   │   │   │   └── tfl_logo.png
-│   │   │           │   │   │   └── lr
-│   │   │           │   │   │       ├── lr-1.jpg
-│   │   │           │   │   │       ├── lr-2.jpg
-│   │   │           │   │   │       └── lr-3.jpg
+│   │   │           │   │   │   ├── lr
+│   │   │           │   │   │   │   ├── lr-1.jpg
+│   │   │           │   │   │   │   ├── lr-2.jpg
+│   │   │           │   │   │   │   └── lr-3.jpg
+│   │   │           │   │   │   └── models
+│   │   │           │   │   │       └── README.md  # Project documentation
 │   │   │           │   │   ├── blobs
 │   │   │           │   │   │   └── .gitkeep
 │   │   │           │   │   ├── ios
+│   │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
 │   │   │           │   │   │   ├── Flutter
 │   │   │           │   │   │   │   ├── AppFrameworkInfo.plist
 │   │   │           │   │   │   │   ├── Debug.xcconfig
@@ -2012,6 +2290,7 @@ samsung_ai/
 │   │   │           │   │   ├── lib
 │   │   │           │   │   │   └── main.dart
 │   │   │           │   │   ├── linux
+│   │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
 │   │   │           │   │   │   ├── CMakeLists.txt
 │   │   │           │   │   │   ├── flutter
 │   │   │           │   │   │   │   ├── CMakeLists.txt
@@ -2022,6 +2301,7 @@ samsung_ai/
 │   │   │           │   │   │   ├── my_application.cc
 │   │   │           │   │   │   └── my_application.h
 │   │   │           │   │   ├── macos
+│   │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
 │   │   │           │   │   │   ├── Flutter
 │   │   │           │   │   │   │   ├── Flutter-Debug.xcconfig
 │   │   │           │   │   │   │   └── Flutter-Release.xcconfig
@@ -2072,6 +2352,7 @@ samsung_ai/
 │   │   │           │   │   ├── test
 │   │   │           │   │   │   └── widget_test.dart
 │   │   │           │   │   └── windows
+│   │   │           │   │       ├── .gitignore  # gitignore file for GitHub
 │   │   │           │   │       ├── CMakeLists.txt
 │   │   │           │   │       ├── flutter
 │   │   │           │   │       │   ├── CMakeLists.txt
@@ -2093,9 +2374,12 @@ samsung_ai/
 │   │   │           │   │           ├── win32_window.cpp
 │   │   │           │   │           └── win32_window.h
 │   │   │           │   └── text_classification
+│   │   │           │       ├── .gitignore  # gitignore file for GitHub
+│   │   │           │       ├── .metadata
 │   │   │           │       ├── README.md  # Project documentation
 │   │   │           │       ├── analysis_options.yaml
 │   │   │           │       ├── android
+│   │   │           │       │   ├── .gitignore  # gitignore file for GitHub
 │   │   │           │       │   ├── app
 │   │   │           │       │   │   ├── build.gradle
 │   │   │           │       │   │   └── src
@@ -2137,6 +2421,8 @@ samsung_ai/
 │   │   │           │       │   ├── gradle.properties
 │   │   │           │       │   └── settings.gradle
 │   │   │           │       ├── assets
+│   │   │           │       │   ├── models
+│   │   │           │       │   │   └── README.md  # Project documentation
 │   │   │           │       │   └── test
 │   │   │           │       │       ├── add.bin
 │   │   │           │       │       ├── bad_model.tflite
@@ -2152,6 +2438,7 @@ samsung_ai/
 │   │   │           │       ├── integration_test
 │   │   │           │       │   └── tflite_flutter_test.dart
 │   │   │           │       ├── ios
+│   │   │           │       │   ├── .gitignore  # gitignore file for GitHub
 │   │   │           │       │   ├── Flutter
 │   │   │           │       │   │   ├── AppFrameworkInfo.plist
 │   │   │           │       │   │   ├── Debug.xcconfig
@@ -2203,6 +2490,7 @@ samsung_ai/
 │   │   │           │       │   ├── classifier.dart
 │   │   │           │       │   └── main.dart
 │   │   │           │       ├── linux
+│   │   │           │       │   ├── .gitignore  # gitignore file for GitHub
 │   │   │           │       │   ├── CMakeLists.txt
 │   │   │           │       │   ├── flutter
 │   │   │           │       │   │   ├── CMakeLists.txt
@@ -2213,6 +2501,7 @@ samsung_ai/
 │   │   │           │       │   ├── my_application.cc
 │   │   │           │       │   └── my_application.h
 │   │   │           │       ├── macos
+│   │   │           │       │   ├── .gitignore  # gitignore file for GitHub
 │   │   │           │       │   ├── Flutter
 │   │   │           │       │   │   ├── Flutter-Debug.xcconfig
 │   │   │           │       │   │   └── Flutter-Release.xcconfig
@@ -2262,6 +2551,7 @@ samsung_ai/
 │   │   │           │       ├── test_driver
 │   │   │           │       │   └── integration_test.dart
 │   │   │           │       └── windows
+│   │   │           │           ├── .gitignore  # gitignore file for GitHub
 │   │   │           │           ├── CMakeLists.txt
 │   │   │           │           ├── flutter
 │   │   │           │           │   ├── CMakeLists.txt
@@ -2285,6 +2575,9 @@ samsung_ai/
 │   │   │           ├── ffigen_tensorflow_lite.yaml
 │   │   │           ├── flutter-tflite.code-workspace
 │   │   │           ├── ios
+│   │   │           │   ├── .gitignore  # gitignore file for GitHub
+│   │   │           │   ├── Assets
+│   │   │           │   │   └── .gitkeep
 │   │   │           │   ├── Classes
 │   │   │           │   │   └── TfliteFlutterPlugin.swift
 │   │   │           │   └── tflite_flutter.podspec
@@ -2344,8 +2637,11 @@ samsung_ai/
 │   │   │           │       └── xnnpack_delegate.h
 │   │   │           ├── test
 │   │   │           │   ├── tflite_flutter_method_channel_test.dart
-│   │   │           │   └── tflite_flutter_test.dart
+│   │   │           │   ├── tflite_flutter_test.dart
+│   │   │           │   └── util
+│   │   │           │       └── byte_conversion_utils_test.dart
 │   │   │           └── windows
+│   │   │               ├── .gitignore  # gitignore file for GitHub
 │   │   │               ├── CMakeLists.txt
 │   │   │               ├── flutter_tflite_plugin.cpp
 │   │   │               ├── flutter_tflite_plugin.h
@@ -2479,6 +2775,12 @@ samsung_ai/
     │   │       │       ├── guid_test.dart
     │   │       │       └── path_provider_windows_test.dart
     │   │       └── tflite_flutter
+    │   │           ├── .github
+    │   │           │   └── workflows
+    │   │           │       ├── README.md  # Project documentation
+    │   │           │       └── flutter-ci.yml
+    │   │           ├── .gitignore  # gitignore file for GitHub
+    │   │           ├── .metadata
     │   │           ├── AUTHORS
     │   │           ├── CHANGELOG.md
     │   │           ├── CODE_OF_CONDUCT.md
@@ -2487,6 +2789,7 @@ samsung_ai/
     │   │           ├── README.md  # Project documentation
     │   │           ├── analysis_options.yaml
     │   │           ├── android
+    │   │           │   ├── .gitignore  # gitignore file for GitHub
     │   │           │   ├── build.gradle
     │   │           │   ├── settings.gradle
     │   │           │   └── src
@@ -2507,9 +2810,12 @@ samsung_ai/
     │   │           │   └── tflite_flutter_cover.png
     │   │           ├── example
     │   │           │   ├── audio_classification
+    │   │           │   │   ├── .gitignore  # gitignore file for GitHub
+    │   │           │   │   ├── .metadata
     │   │           │   │   ├── README.md  # Project documentation
     │   │           │   │   ├── analysis_options.yaml
     │   │           │   │   ├── android
+    │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
     │   │           │   │   │   ├── app
     │   │           │   │   │   │   ├── build.gradle
     │   │           │   │   │   │   └── src
@@ -2551,12 +2857,17 @@ samsung_ai/
     │   │           │   │   │   ├── gradle.properties
     │   │           │   │   │   └── settings.gradle
     │   │           │   │   ├── assets
-    │   │           │   │   │   └── images
-    │   │           │   │   │       ├── logo.png
-    │   │           │   │   │       └── tfl_logo.png
+    │   │           │   │   │   ├── images
+    │   │           │   │   │   │   ├── logo.png
+    │   │           │   │   │   │   └── tfl_logo.png
+    │   │           │   │   │   └── models
+    │   │           │   │   │       ├── README.md  # Project documentation
+    │   │           │   │   │       ├── yamnet.tflite
+    │   │           │   │   │       └── yamnet_label_list.txt
     │   │           │   │   ├── blobs
     │   │           │   │   │   └── .gitkeep
     │   │           │   │   ├── ios
+    │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
     │   │           │   │   │   ├── Flutter
     │   │           │   │   │   │   ├── AppFrameworkInfo.plist
     │   │           │   │   │   │   ├── Debug.xcconfig
@@ -2615,6 +2926,7 @@ samsung_ai/
     │   │           │   │   │   │   └── audio_classification_helper.dart
     │   │           │   │   │   └── main.dart
     │   │           │   │   ├── linux
+    │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
     │   │           │   │   │   ├── CMakeLists.txt
     │   │           │   │   │   ├── flutter
     │   │           │   │   │   │   ├── CMakeLists.txt
@@ -2625,6 +2937,7 @@ samsung_ai/
     │   │           │   │   │   ├── my_application.cc
     │   │           │   │   │   └── my_application.h
     │   │           │   │   ├── macos
+    │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
     │   │           │   │   │   ├── Flutter
     │   │           │   │   │   │   ├── Flutter-Debug.xcconfig
     │   │           │   │   │   │   └── Flutter-Release.xcconfig
@@ -2675,6 +2988,7 @@ samsung_ai/
     │   │           │   │   ├── test
     │   │           │   │   │   └── widget_test.dart
     │   │           │   │   └── windows
+    │   │           │   │       ├── .gitignore  # gitignore file for GitHub
     │   │           │   │       ├── CMakeLists.txt
     │   │           │   │       ├── flutter
     │   │           │   │       │   ├── CMakeLists.txt
@@ -2696,9 +3010,12 @@ samsung_ai/
     │   │           │   │           ├── win32_window.cpp
     │   │           │   │           └── win32_window.h
     │   │           │   ├── bertqa
+    │   │           │   │   ├── .gitignore  # gitignore file for GitHub
+    │   │           │   │   ├── .metadata
     │   │           │   │   ├── README.md  # Project documentation
     │   │           │   │   ├── analysis_options.yaml
     │   │           │   │   ├── android
+    │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
     │   │           │   │   │   ├── app
     │   │           │   │   │   │   ├── build.gradle
     │   │           │   │   │   │   └── src
@@ -2740,9 +3057,11 @@ samsung_ai/
     │   │           │   │   │   ├── gradle.properties
     │   │           │   │   │   └── settings.gradle
     │   │           │   │   ├── assets
+    │   │           │   │   │   ├── .gitkeep
     │   │           │   │   │   └── images
     │   │           │   │   │       └── banner_lite.png
     │   │           │   │   ├── ios
+    │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
     │   │           │   │   │   ├── Flutter
     │   │           │   │   │   │   ├── AppFrameworkInfo.plist
     │   │           │   │   │   │   ├── Debug.xcconfig
@@ -2817,9 +3136,12 @@ samsung_ai/
     │   │           │   │   └── test
     │   │           │   │       └── tokenizer_test.dart
     │   │           │   ├── digit_classification
+    │   │           │   │   ├── .gitignore  # gitignore file for GitHub
+    │   │           │   │   ├── .metadata
     │   │           │   │   ├── README.md  # Project documentation
     │   │           │   │   ├── analysis_options.yaml
     │   │           │   │   ├── android
+    │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
     │   │           │   │   │   ├── app
     │   │           │   │   │   │   ├── build.gradle
     │   │           │   │   │   │   └── src
@@ -2861,9 +3183,11 @@ samsung_ai/
     │   │           │   │   │   ├── gradle.properties
     │   │           │   │   │   └── settings.gradle
     │   │           │   │   ├── assets
+    │   │           │   │   │   ├── .gitkeep
     │   │           │   │   │   └── images
     │   │           │   │   │       └── tfl_logo.png
     │   │           │   │   ├── ios
+    │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
     │   │           │   │   │   ├── Flutter
     │   │           │   │   │   │   ├── AppFrameworkInfo.plist
     │   │           │   │   │   │   ├── Debug.xcconfig
@@ -2932,6 +3256,7 @@ samsung_ai/
     │   │           │   │   ├── README.md  # Project documentation
     │   │           │   │   ├── analysis_options.yaml
     │   │           │   │   ├── android
+    │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
     │   │           │   │   │   ├── app
     │   │           │   │   │   │   ├── build.gradle
     │   │           │   │   │   │   └── src
@@ -2972,9 +3297,11 @@ samsung_ai/
     │   │           │   │   │   ├── gradle.properties
     │   │           │   │   │   └── settings.gradle
     │   │           │   │   ├── assets
+    │   │           │   │   │   ├── .gitkeep
     │   │           │   │   │   └── images
     │   │           │   │   │       └── tfl_logo.png
     │   │           │   │   ├── ios
+    │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
     │   │           │   │   │   ├── Flutter
     │   │           │   │   │   │   ├── AppFrameworkInfo.plist
     │   │           │   │   │   │   ├── Debug.xcconfig
@@ -3042,9 +3369,12 @@ samsung_ai/
     │   │           │   │   └── scripts
     │   │           │   │       └── download_model.sh
     │   │           │   ├── image_classification_mobilenet
+    │   │           │   │   ├── .gitignore  # gitignore file for GitHub
+    │   │           │   │   ├── .metadata
     │   │           │   │   ├── README.md  # Project documentation
     │   │           │   │   ├── analysis_options.yaml
     │   │           │   │   ├── android
+    │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
     │   │           │   │   │   ├── app
     │   │           │   │   │   │   ├── build.gradle
     │   │           │   │   │   │   └── src
@@ -3085,12 +3415,17 @@ samsung_ai/
     │   │           │   │   │   ├── gradle.properties
     │   │           │   │   │   └── settings.gradle
     │   │           │   │   ├── assets
-    │   │           │   │   │   └── images
-    │   │           │   │   │       ├── logo.png
-    │   │           │   │   │       └── tfl_logo.png
+    │   │           │   │   │   ├── images
+    │   │           │   │   │   │   ├── logo.png
+    │   │           │   │   │   │   └── tfl_logo.png
+    │   │           │   │   │   └── models
+    │   │           │   │   │       ├── README.md  # Project documentation
+    │   │           │   │   │       ├── labels.txt
+    │   │           │   │   │       └── mobilenet_quant.tflite
     │   │           │   │   ├── blobs
     │   │           │   │   │   └── .gitkeep
     │   │           │   │   ├── ios
+    │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
     │   │           │   │   │   ├── Flutter
     │   │           │   │   │   │   ├── AppFrameworkInfo.plist
     │   │           │   │   │   │   ├── Debug.xcconfig
@@ -3160,6 +3495,7 @@ samsung_ai/
     │   │           │   │   │       ├── camera.dart
     │   │           │   │   │       └── gallery.dart
     │   │           │   │   ├── linux
+    │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
     │   │           │   │   │   ├── CMakeLists.txt
     │   │           │   │   │   ├── flutter
     │   │           │   │   │   │   ├── CMakeLists.txt
@@ -3170,6 +3506,7 @@ samsung_ai/
     │   │           │   │   │   ├── my_application.cc
     │   │           │   │   │   └── my_application.h
     │   │           │   │   ├── macos
+    │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
     │   │           │   │   │   ├── Flutter
     │   │           │   │   │   │   ├── Flutter-Debug.xcconfig
     │   │           │   │   │   │   └── Flutter-Release.xcconfig
@@ -3221,6 +3558,7 @@ samsung_ai/
     │   │           │   │   ├── test
     │   │           │   │   │   └── widget_test.dart
     │   │           │   │   └── windows
+    │   │           │   │       ├── .gitignore  # gitignore file for GitHub
     │   │           │   │       ├── CMakeLists.txt
     │   │           │   │       ├── flutter
     │   │           │   │       │   ├── CMakeLists.txt
@@ -3242,9 +3580,12 @@ samsung_ai/
     │   │           │   │           ├── win32_window.cpp
     │   │           │   │           └── win32_window.h
     │   │           │   ├── image_segmentation
+    │   │           │   │   ├── .gitignore  # gitignore file for GitHub
+    │   │           │   │   ├── .metadata
     │   │           │   │   ├── README.md  # Project documentation
     │   │           │   │   ├── analysis_options.yaml
     │   │           │   │   ├── android
+    │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
     │   │           │   │   │   ├── app
     │   │           │   │   │   │   ├── build.gradle
     │   │           │   │   │   │   └── src
@@ -3285,9 +3626,11 @@ samsung_ai/
     │   │           │   │   │   ├── gradle.properties
     │   │           │   │   │   └── settings.gradle
     │   │           │   │   ├── assets
+    │   │           │   │   │   ├── .gitkeep
     │   │           │   │   │   └── images
     │   │           │   │   │       └── tfl_logo.png
     │   │           │   │   ├── ios
+    │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
     │   │           │   │   │   ├── Flutter
     │   │           │   │   │   │   ├── AppFrameworkInfo.plist
     │   │           │   │   │   │   ├── Debug.xcconfig
@@ -3354,9 +3697,12 @@ samsung_ai/
     │   │           │   │   └── scripts
     │   │           │   │       └── download_models.sh
     │   │           │   ├── live_object_detection_ssd_mobilenet
+    │   │           │   │   ├── .gitignore  # gitignore file for GitHub
+    │   │           │   │   ├── .metadata
     │   │           │   │   ├── README.md  # Project documentation
     │   │           │   │   ├── analysis_options.yaml
     │   │           │   │   ├── android
+    │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
     │   │           │   │   │   ├── app
     │   │           │   │   │   │   ├── build.gradle
     │   │           │   │   │   │   └── src
@@ -3397,11 +3743,14 @@ samsung_ai/
     │   │           │   │   │   ├── gradle.properties
     │   │           │   │   │   └── settings.gradle
     │   │           │   │   ├── assets
-    │   │           │   │   │   └── images
-    │   │           │   │   │       └── tfl_logo.png
+    │   │           │   │   │   ├── images
+    │   │           │   │   │   │   └── tfl_logo.png
+    │   │           │   │   │   └── models
+    │   │           │   │   │       └── README.md  # Project documentation
     │   │           │   │   ├── blobs
     │   │           │   │   │   └── .gitkeep
     │   │           │   │   ├── ios
+    │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
     │   │           │   │   │   ├── Flutter
     │   │           │   │   │   │   ├── AppFrameworkInfo.plist
     │   │           │   │   │   │   ├── Debug.xcconfig
@@ -3470,6 +3819,7 @@ samsung_ai/
     │   │           │   │   │   └── utils
     │   │           │   │   │       └── image_utils.dart
     │   │           │   │   ├── linux
+    │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
     │   │           │   │   │   ├── CMakeLists.txt
     │   │           │   │   │   ├── flutter
     │   │           │   │   │   │   ├── CMakeLists.txt
@@ -3488,6 +3838,7 @@ samsung_ai/
     │   │           │   │   ├── test
     │   │           │   │   │   └── widget_test.dart
     │   │           │   │   └── windows
+    │   │           │   │       ├── .gitignore  # gitignore file for GitHub
     │   │           │   │       ├── CMakeLists.txt
     │   │           │   │       ├── flutter
     │   │           │   │       │   ├── CMakeLists.txt
@@ -3509,9 +3860,12 @@ samsung_ai/
     │   │           │   │           ├── win32_window.cpp
     │   │           │   │           └── win32_window.h
     │   │           │   ├── object_detection_ssd_mobilenet
+    │   │           │   │   ├── .gitignore  # gitignore file for GitHub
+    │   │           │   │   ├── .metadata
     │   │           │   │   ├── README.md  # Project documentation
     │   │           │   │   ├── analysis_options.yaml
     │   │           │   │   ├── android
+    │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
     │   │           │   │   │   ├── app
     │   │           │   │   │   │   ├── build.gradle
     │   │           │   │   │   │   └── src
@@ -3552,11 +3906,14 @@ samsung_ai/
     │   │           │   │   │   ├── gradle.properties
     │   │           │   │   │   └── settings.gradle
     │   │           │   │   ├── assets
-    │   │           │   │   │   └── images
-    │   │           │   │   │       └── tfl_logo.png
+    │   │           │   │   │   ├── images
+    │   │           │   │   │   │   └── tfl_logo.png
+    │   │           │   │   │   └── models
+    │   │           │   │   │       └── README.md  # Project documentation
     │   │           │   │   ├── blobs
     │   │           │   │   │   └── .gitkeep
     │   │           │   │   ├── ios
+    │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
     │   │           │   │   │   ├── Flutter
     │   │           │   │   │   │   ├── AppFrameworkInfo.plist
     │   │           │   │   │   │   ├── Debug.xcconfig
@@ -3614,6 +3971,7 @@ samsung_ai/
     │   │           │   │   │   ├── main.dart
     │   │           │   │   │   └── object_detection.dart
     │   │           │   │   ├── linux
+    │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
     │   │           │   │   │   ├── CMakeLists.txt
     │   │           │   │   │   ├── flutter
     │   │           │   │   │   │   ├── CMakeLists.txt
@@ -3624,6 +3982,7 @@ samsung_ai/
     │   │           │   │   │   ├── my_application.cc
     │   │           │   │   │   └── my_application.h
     │   │           │   │   ├── macos
+    │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
     │   │           │   │   │   ├── Flutter
     │   │           │   │   │   │   ├── Flutter-Debug.xcconfig
     │   │           │   │   │   │   └── Flutter-Release.xcconfig
@@ -3672,6 +4031,201 @@ samsung_ai/
     │   │           │   │   ├── test
     │   │           │   │   │   └── widget_test.dart
     │   │           │   │   └── windows
+    │   │           │   │       ├── .gitignore  # gitignore file for GitHub
+    │   │           │   │       ├── CMakeLists.txt
+    │   │           │   │       ├── flutter
+    │   │           │   │       │   ├── CMakeLists.txt
+    │   │           │   │       │   ├── generated_plugin_registrant.cc
+    │   │           │   │       │   ├── generated_plugin_registrant.h
+    │   │           │   │       │   └── generated_plugins.cmake
+    │   │           │   │       └── runner
+    │   │           │   │           ├── CMakeLists.txt
+    │   │           │   │           ├── Runner.rc
+    │   │           │   │           ├── flutter_window.cpp
+    │   │           │   │           ├── flutter_window.h
+    │   │           │   │           ├── main.cpp
+    │   │           │   │           ├── resource.h
+    │   │           │   │           ├── resources
+    │   │           │   │           │   └── app_icon.ico
+    │   │           │   │           ├── runner.exe.manifest
+    │   │           │   │           ├── utils.cpp
+    │   │           │   │           ├── utils.h
+    │   │           │   │           ├── win32_window.cpp
+    │   │           │   │           └── win32_window.h
+    │   │           │   ├── object_detection_ssd_mobilenet_v2
+    │   │           │   │   ├── .gitignore  # gitignore file for GitHub
+    │   │           │   │   ├── .metadata
+    │   │           │   │   ├── README.md  # Project documentation
+    │   │           │   │   ├── analysis_options.yaml
+    │   │           │   │   ├── android
+    │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
+    │   │           │   │   │   ├── app
+    │   │           │   │   │   │   ├── build.gradle
+    │   │           │   │   │   │   └── src
+    │   │           │   │   │   │       ├── debug
+    │   │           │   │   │   │       │   └── AndroidManifest.xml
+    │   │           │   │   │   │       ├── main
+    │   │           │   │   │   │       │   ├── AndroidManifest.xml
+    │   │           │   │   │   │       │   ├── kotlin
+    │   │           │   │   │   │       │   │   └── com
+    │   │           │   │   │   │       │   │       └── example
+    │   │           │   │   │   │       │   │           └── object_detection_ssd_mobilenet
+    │   │           │   │   │   │       │   │               └── MainActivity.kt
+    │   │           │   │   │   │       │   └── res
+    │   │           │   │   │   │       │       ├── drawable
+    │   │           │   │   │   │       │       │   └── launch_background.xml
+    │   │           │   │   │   │       │       ├── drawable-v21
+    │   │           │   │   │   │       │       │   └── launch_background.xml
+    │   │           │   │   │   │       │       ├── mipmap-hdpi
+    │   │           │   │   │   │       │       │   └── ic_launcher.png
+    │   │           │   │   │   │       │       ├── mipmap-mdpi
+    │   │           │   │   │   │       │       │   └── ic_launcher.png
+    │   │           │   │   │   │       │       ├── mipmap-xhdpi
+    │   │           │   │   │   │       │       │   └── ic_launcher.png
+    │   │           │   │   │   │       │       ├── mipmap-xxhdpi
+    │   │           │   │   │   │       │       │   └── ic_launcher.png
+    │   │           │   │   │   │       │       ├── mipmap-xxxhdpi
+    │   │           │   │   │   │       │       │   └── ic_launcher.png
+    │   │           │   │   │   │       │       ├── values
+    │   │           │   │   │   │       │       │   └── styles.xml
+    │   │           │   │   │   │       │       └── values-night
+    │   │           │   │   │   │       │           └── styles.xml
+    │   │           │   │   │   │       └── profile
+    │   │           │   │   │   │           └── AndroidManifest.xml
+    │   │           │   │   │   ├── build.gradle
+    │   │           │   │   │   ├── gradle
+    │   │           │   │   │   │   └── wrapper
+    │   │           │   │   │   │       └── gradle-wrapper.properties
+    │   │           │   │   │   ├── gradle.properties
+    │   │           │   │   │   └── settings.gradle
+    │   │           │   │   ├── assets
+    │   │           │   │   │   ├── custom_ssd_mobilenet_v2.tflite
+    │   │           │   │   │   ├── custom_ssd_mobilenet_v2_fpn_lite_320x320.tflite
+    │   │           │   │   │   ├── images
+    │   │           │   │   │   │   └── tfl_logo.png
+    │   │           │   │   │   └── labels.txt
+    │   │           │   │   ├── blobs
+    │   │           │   │   │   └── .gitkeep
+    │   │           │   │   ├── ios
+    │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
+    │   │           │   │   │   ├── Flutter
+    │   │           │   │   │   │   ├── AppFrameworkInfo.plist
+    │   │           │   │   │   │   ├── Debug.xcconfig
+    │   │           │   │   │   │   └── Release.xcconfig
+    │   │           │   │   │   ├── Podfile
+    │   │           │   │   │   ├── Runner
+    │   │           │   │   │   │   ├── AppDelegate.swift
+    │   │           │   │   │   │   ├── Assets.xcassets
+    │   │           │   │   │   │   │   ├── AppIcon.appiconset
+    │   │           │   │   │   │   │   │   ├── Contents.json
+    │   │           │   │   │   │   │   │   ├── Icon-App-1024x1024@1x.png
+    │   │           │   │   │   │   │   │   ├── Icon-App-20x20@1x.png
+    │   │           │   │   │   │   │   │   ├── Icon-App-20x20@2x.png
+    │   │           │   │   │   │   │   │   ├── Icon-App-20x20@3x.png
+    │   │           │   │   │   │   │   │   ├── Icon-App-29x29@1x.png
+    │   │           │   │   │   │   │   │   ├── Icon-App-29x29@2x.png
+    │   │           │   │   │   │   │   │   ├── Icon-App-29x29@3x.png
+    │   │           │   │   │   │   │   │   ├── Icon-App-40x40@1x.png
+    │   │           │   │   │   │   │   │   ├── Icon-App-40x40@2x.png
+    │   │           │   │   │   │   │   │   ├── Icon-App-40x40@3x.png
+    │   │           │   │   │   │   │   │   ├── Icon-App-60x60@2x.png
+    │   │           │   │   │   │   │   │   ├── Icon-App-60x60@3x.png
+    │   │           │   │   │   │   │   │   ├── Icon-App-76x76@1x.png
+    │   │           │   │   │   │   │   │   ├── Icon-App-76x76@2x.png
+    │   │           │   │   │   │   │   │   └── Icon-App-83.5x83.5@2x.png
+    │   │           │   │   │   │   │   └── LaunchImage.imageset
+    │   │           │   │   │   │   │       ├── Contents.json
+    │   │           │   │   │   │   │       ├── LaunchImage.png
+    │   │           │   │   │   │   │       ├── LaunchImage@2x.png
+    │   │           │   │   │   │   │       ├── LaunchImage@3x.png
+    │   │           │   │   │   │   │       └── README.md  # Project documentation
+    │   │           │   │   │   │   ├── Base.lproj
+    │   │           │   │   │   │   │   ├── LaunchScreen.storyboard
+    │   │           │   │   │   │   │   └── Main.storyboard
+    │   │           │   │   │   │   ├── Info.plist
+    │   │           │   │   │   │   └── Runner-Bridging-Header.h
+    │   │           │   │   │   ├── Runner.xcodeproj
+    │   │           │   │   │   │   ├── project.pbxproj
+    │   │           │   │   │   │   ├── project.xcworkspace
+    │   │           │   │   │   │   │   ├── contents.xcworkspacedata
+    │   │           │   │   │   │   │   └── xcshareddata
+    │   │           │   │   │   │   │       ├── IDEWorkspaceChecks.plist
+    │   │           │   │   │   │   │       └── WorkspaceSettings.xcsettings
+    │   │           │   │   │   │   └── xcshareddata
+    │   │           │   │   │   │       └── xcschemes
+    │   │           │   │   │   │           └── Runner.xcscheme
+    │   │           │   │   │   ├── Runner.xcworkspace
+    │   │           │   │   │   │   ├── contents.xcworkspacedata
+    │   │           │   │   │   │   └── xcshareddata
+    │   │           │   │   │   │       ├── IDEWorkspaceChecks.plist
+    │   │           │   │   │   │       └── WorkspaceSettings.xcsettings
+    │   │           │   │   │   └── RunnerTests
+    │   │           │   │   │       └── RunnerTests.swift
+    │   │           │   │   ├── lib
+    │   │           │   │   │   ├── main.dart
+    │   │           │   │   │   └── object_detection.dart
+    │   │           │   │   ├── linux
+    │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
+    │   │           │   │   │   ├── CMakeLists.txt
+    │   │           │   │   │   ├── flutter
+    │   │           │   │   │   │   ├── CMakeLists.txt
+    │   │           │   │   │   │   ├── generated_plugin_registrant.cc
+    │   │           │   │   │   │   ├── generated_plugin_registrant.h
+    │   │           │   │   │   │   └── generated_plugins.cmake
+    │   │           │   │   │   ├── main.cc
+    │   │           │   │   │   ├── my_application.cc
+    │   │           │   │   │   └── my_application.h
+    │   │           │   │   ├── macos
+    │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
+    │   │           │   │   │   ├── Flutter
+    │   │           │   │   │   │   ├── Flutter-Debug.xcconfig
+    │   │           │   │   │   │   └── Flutter-Release.xcconfig
+    │   │           │   │   │   ├── Podfile
+    │   │           │   │   │   ├── Runner
+    │   │           │   │   │   │   ├── AppDelegate.swift
+    │   │           │   │   │   │   ├── Assets.xcassets
+    │   │           │   │   │   │   │   └── AppIcon.appiconset
+    │   │           │   │   │   │   │       ├── Contents.json
+    │   │           │   │   │   │   │       ├── app_icon_1024.png
+    │   │           │   │   │   │   │       ├── app_icon_128.png
+    │   │           │   │   │   │   │       ├── app_icon_16.png
+    │   │           │   │   │   │   │       ├── app_icon_256.png
+    │   │           │   │   │   │   │       ├── app_icon_32.png
+    │   │           │   │   │   │   │       ├── app_icon_512.png
+    │   │           │   │   │   │   │       └── app_icon_64.png
+    │   │           │   │   │   │   ├── Base.lproj
+    │   │           │   │   │   │   │   └── MainMenu.xib
+    │   │           │   │   │   │   ├── Configs
+    │   │           │   │   │   │   │   ├── AppInfo.xcconfig
+    │   │           │   │   │   │   │   ├── Debug.xcconfig
+    │   │           │   │   │   │   │   ├── Release.xcconfig
+    │   │           │   │   │   │   │   └── Warnings.xcconfig
+    │   │           │   │   │   │   ├── DebugProfile.entitlements
+    │   │           │   │   │   │   ├── Info.plist
+    │   │           │   │   │   │   ├── MainFlutterWindow.swift
+    │   │           │   │   │   │   └── Release.entitlements
+    │   │           │   │   │   ├── Runner.xcodeproj
+    │   │           │   │   │   │   ├── project.pbxproj
+    │   │           │   │   │   │   ├── project.xcworkspace
+    │   │           │   │   │   │   │   └── xcshareddata
+    │   │           │   │   │   │   │       └── IDEWorkspaceChecks.plist
+    │   │           │   │   │   │   └── xcshareddata
+    │   │           │   │   │   │       └── xcschemes
+    │   │           │   │   │   │           └── Runner.xcscheme
+    │   │           │   │   │   ├── Runner.xcworkspace
+    │   │           │   │   │   │   ├── contents.xcworkspacedata
+    │   │           │   │   │   │   └── xcshareddata
+    │   │           │   │   │   │       └── IDEWorkspaceChecks.plist
+    │   │           │   │   │   └── RunnerTests
+    │   │           │   │   │       └── RunnerTests.swift
+    │   │           │   │   ├── pubspec.yaml
+    │   │           │   │   ├── screenshot.png
+    │   │           │   │   ├── scripts
+    │   │           │   │   │   └── download_model.sh
+    │   │           │   │   ├── test
+    │   │           │   │   │   └── widget_test.dart
+    │   │           │   │   └── windows
+    │   │           │   │       ├── .gitignore  # gitignore file for GitHub
     │   │           │   │       ├── CMakeLists.txt
     │   │           │   │       ├── flutter
     │   │           │   │       │   ├── CMakeLists.txt
@@ -3693,9 +4247,12 @@ samsung_ai/
     │   │           │   │           ├── win32_window.cpp
     │   │           │   │           └── win32_window.h
     │   │           │   ├── pose_estimation
+    │   │           │   │   ├── .gitignore  # gitignore file for GitHub
+    │   │           │   │   ├── .metadata
     │   │           │   │   ├── README.md  # Project documentation
     │   │           │   │   ├── analysis_options.yaml
     │   │           │   │   ├── android
+    │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
     │   │           │   │   │   ├── app
     │   │           │   │   │   │   ├── build.gradle
     │   │           │   │   │   │   └── src
@@ -3739,6 +4296,7 @@ samsung_ai/
     │   │           │   │   │   └── images
     │   │           │   │   │       └── tfl_logo.png
     │   │           │   │   ├── ios
+    │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
     │   │           │   │   │   ├── Flutter
     │   │           │   │   │   │   ├── AppFrameworkInfo.plist
     │   │           │   │   │   │   ├── Debug.xcconfig
@@ -3811,6 +4369,7 @@ samsung_ai/
     │   │           │   ├── reinforcement_learning
     │   │           │   │   ├── README.md  # Project documentation
     │   │           │   │   ├── android
+    │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
     │   │           │   │   │   ├── app
     │   │           │   │   │   │   ├── build.gradle
     │   │           │   │   │   │   └── src
@@ -3851,8 +4410,12 @@ samsung_ai/
     │   │           │   │   │   │       └── gradle-wrapper.properties
     │   │           │   │   │   ├── gradle.properties
     │   │           │   │   │   └── settings.gradle
+    │   │           │   │   ├── assets
+    │   │           │   │   │   └── models
+    │   │           │   │   │       └── README.md  # Project documentation
     │   │           │   │   ├── demo.gif
     │   │           │   │   ├── ios
+    │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
     │   │           │   │   │   ├── Flutter
     │   │           │   │   │   │   ├── AppFrameworkInfo.plist
     │   │           │   │   │   │   ├── Debug.xcconfig
@@ -3909,9 +4472,12 @@ samsung_ai/
     │   │           │   │   └── test_driver
     │   │           │   │       └── integration_test.dart
     │   │           │   ├── style_transfer
+    │   │           │   │   ├── .gitignore  # gitignore file for GitHub
+    │   │           │   │   ├── .metadata
     │   │           │   │   ├── README.md  # Project documentation
     │   │           │   │   ├── analysis_options.yaml
     │   │           │   │   ├── android
+    │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
     │   │           │   │   │   ├── app
     │   │           │   │   │   │   ├── build.gradle
     │   │           │   │   │   │   └── src
@@ -3955,6 +4521,8 @@ samsung_ai/
     │   │           │   │   │   ├── images
     │   │           │   │   │   │   ├── logo.png
     │   │           │   │   │   │   └── tfl_logo.png
+    │   │           │   │   │   ├── models
+    │   │           │   │   │   │   └── README.md  # Project documentation
     │   │           │   │   │   └── styles
     │   │           │   │   │       ├── style0.jpg
     │   │           │   │   │       ├── style1.jpg
@@ -3985,6 +4553,7 @@ samsung_ai/
     │   │           │   │   ├── blobs
     │   │           │   │   │   └── .gitkeep
     │   │           │   │   ├── ios
+    │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
     │   │           │   │   │   ├── Flutter
     │   │           │   │   │   │   ├── AppFrameworkInfo.plist
     │   │           │   │   │   │   ├── Debug.xcconfig
@@ -4047,6 +4616,7 @@ samsung_ai/
     │   │           │   │   ├── lib
     │   │           │   │   │   └── main.dart
     │   │           │   │   ├── linux
+    │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
     │   │           │   │   │   ├── CMakeLists.txt
     │   │           │   │   │   ├── flutter
     │   │           │   │   │   │   ├── CMakeLists.txt
@@ -4057,6 +4627,7 @@ samsung_ai/
     │   │           │   │   │   ├── my_application.cc
     │   │           │   │   │   └── my_application.h
     │   │           │   │   ├── macos
+    │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
     │   │           │   │   │   ├── Flutter
     │   │           │   │   │   │   ├── Flutter-Debug.xcconfig
     │   │           │   │   │   │   └── Flutter-Release.xcconfig
@@ -4105,6 +4676,7 @@ samsung_ai/
     │   │           │   │   ├── test
     │   │           │   │   │   └── widget_test.dart
     │   │           │   │   └── windows
+    │   │           │   │       ├── .gitignore  # gitignore file for GitHub
     │   │           │   │       ├── CMakeLists.txt
     │   │           │   │       ├── flutter
     │   │           │   │       │   ├── CMakeLists.txt
@@ -4126,9 +4698,12 @@ samsung_ai/
     │   │           │   │           ├── win32_window.cpp
     │   │           │   │           └── win32_window.h
     │   │           │   ├── super_resolution_esrgan
+    │   │           │   │   ├── .gitignore  # gitignore file for GitHub
+    │   │           │   │   ├── .metadata
     │   │           │   │   ├── README.md  # Project documentation
     │   │           │   │   ├── analysis_options.yaml
     │   │           │   │   ├── android
+    │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
     │   │           │   │   │   ├── app
     │   │           │   │   │   │   ├── build.gradle
     │   │           │   │   │   │   └── src
@@ -4172,13 +4747,16 @@ samsung_ai/
     │   │           │   │   │   ├── images
     │   │           │   │   │   │   ├── logo.png
     │   │           │   │   │   │   └── tfl_logo.png
-    │   │           │   │   │   └── lr
-    │   │           │   │   │       ├── lr-1.jpg
-    │   │           │   │   │       ├── lr-2.jpg
-    │   │           │   │   │       └── lr-3.jpg
+    │   │           │   │   │   ├── lr
+    │   │           │   │   │   │   ├── lr-1.jpg
+    │   │           │   │   │   │   ├── lr-2.jpg
+    │   │           │   │   │   │   └── lr-3.jpg
+    │   │           │   │   │   └── models
+    │   │           │   │   │       └── README.md  # Project documentation
     │   │           │   │   ├── blobs
     │   │           │   │   │   └── .gitkeep
     │   │           │   │   ├── ios
+    │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
     │   │           │   │   │   ├── Flutter
     │   │           │   │   │   │   ├── AppFrameworkInfo.plist
     │   │           │   │   │   │   ├── Debug.xcconfig
@@ -4241,6 +4819,7 @@ samsung_ai/
     │   │           │   │   ├── lib
     │   │           │   │   │   └── main.dart
     │   │           │   │   ├── linux
+    │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
     │   │           │   │   │   ├── CMakeLists.txt
     │   │           │   │   │   ├── flutter
     │   │           │   │   │   │   ├── CMakeLists.txt
@@ -4251,6 +4830,7 @@ samsung_ai/
     │   │           │   │   │   ├── my_application.cc
     │   │           │   │   │   └── my_application.h
     │   │           │   │   ├── macos
+    │   │           │   │   │   ├── .gitignore  # gitignore file for GitHub
     │   │           │   │   │   ├── Flutter
     │   │           │   │   │   │   ├── Flutter-Debug.xcconfig
     │   │           │   │   │   │   └── Flutter-Release.xcconfig
@@ -4301,6 +4881,7 @@ samsung_ai/
     │   │           │   │   ├── test
     │   │           │   │   │   └── widget_test.dart
     │   │           │   │   └── windows
+    │   │           │   │       ├── .gitignore  # gitignore file for GitHub
     │   │           │   │       ├── CMakeLists.txt
     │   │           │   │       ├── flutter
     │   │           │   │       │   ├── CMakeLists.txt
@@ -4322,9 +4903,12 @@ samsung_ai/
     │   │           │   │           ├── win32_window.cpp
     │   │           │   │           └── win32_window.h
     │   │           │   └── text_classification
+    │   │           │       ├── .gitignore  # gitignore file for GitHub
+    │   │           │       ├── .metadata
     │   │           │       ├── README.md  # Project documentation
     │   │           │       ├── analysis_options.yaml
     │   │           │       ├── android
+    │   │           │       │   ├── .gitignore  # gitignore file for GitHub
     │   │           │       │   ├── app
     │   │           │       │   │   ├── build.gradle
     │   │           │       │   │   └── src
@@ -4366,6 +4950,8 @@ samsung_ai/
     │   │           │       │   ├── gradle.properties
     │   │           │       │   └── settings.gradle
     │   │           │       ├── assets
+    │   │           │       │   ├── models
+    │   │           │       │   │   └── README.md  # Project documentation
     │   │           │       │   └── test
     │   │           │       │       ├── add.bin
     │   │           │       │       ├── bad_model.tflite
@@ -4381,6 +4967,7 @@ samsung_ai/
     │   │           │       ├── integration_test
     │   │           │       │   └── tflite_flutter_test.dart
     │   │           │       ├── ios
+    │   │           │       │   ├── .gitignore  # gitignore file for GitHub
     │   │           │       │   ├── Flutter
     │   │           │       │   │   ├── AppFrameworkInfo.plist
     │   │           │       │   │   ├── Debug.xcconfig
@@ -4432,6 +5019,7 @@ samsung_ai/
     │   │           │       │   ├── classifier.dart
     │   │           │       │   └── main.dart
     │   │           │       ├── linux
+    │   │           │       │   ├── .gitignore  # gitignore file for GitHub
     │   │           │       │   ├── CMakeLists.txt
     │   │           │       │   ├── flutter
     │   │           │       │   │   ├── CMakeLists.txt
@@ -4442,6 +5030,7 @@ samsung_ai/
     │   │           │       │   ├── my_application.cc
     │   │           │       │   └── my_application.h
     │   │           │       ├── macos
+    │   │           │       │   ├── .gitignore  # gitignore file for GitHub
     │   │           │       │   ├── Flutter
     │   │           │       │   │   ├── Flutter-Debug.xcconfig
     │   │           │       │   │   └── Flutter-Release.xcconfig
@@ -4491,6 +5080,7 @@ samsung_ai/
     │   │           │       ├── test_driver
     │   │           │       │   └── integration_test.dart
     │   │           │       └── windows
+    │   │           │           ├── .gitignore  # gitignore file for GitHub
     │   │           │           ├── CMakeLists.txt
     │   │           │           ├── flutter
     │   │           │           │   ├── CMakeLists.txt
@@ -4514,6 +5104,9 @@ samsung_ai/
     │   │           ├── ffigen_tensorflow_lite.yaml
     │   │           ├── flutter-tflite.code-workspace
     │   │           ├── ios
+    │   │           │   ├── .gitignore  # gitignore file for GitHub
+    │   │           │   ├── Assets
+    │   │           │   │   └── .gitkeep
     │   │           │   ├── Classes
     │   │           │   │   └── TfliteFlutterPlugin.swift
     │   │           │   └── tflite_flutter.podspec
@@ -4573,8 +5166,11 @@ samsung_ai/
     │   │           │       └── xnnpack_delegate.h
     │   │           ├── test
     │   │           │   ├── tflite_flutter_method_channel_test.dart
-    │   │           │   └── tflite_flutter_test.dart
+    │   │           │   ├── tflite_flutter_test.dart
+    │   │           │   └── util
+    │   │           │       └── byte_conversion_utils_test.dart
     │   │           └── windows
+    │   │               ├── .gitignore  # gitignore file for GitHub
     │   │               ├── CMakeLists.txt
     │   │               ├── flutter_tflite_plugin.cpp
     │   │               ├── flutter_tflite_plugin.h
