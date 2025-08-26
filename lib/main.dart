@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
@@ -8,6 +9,7 @@ import 'package:tiktoken/tiktoken.dart';
 import 'services/crypto_service.dart';
 import 'dart:math' show exp, Random;
 import 'services/pipeline.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
   runApp(const MyApp());
@@ -375,6 +377,13 @@ The future of AI looks very promising with many exciting developments ahead.
       setState(() => _chatResponse = "The context doesn't contain the answer to your question.");
       return;
     }
+    print("Cleaned context:\n$cleanedContext");
+    print("User's query: $query");
+
+        setState(() {
+          _chatResponse = "Context:\n$cleanedContext\n\nGenerating answer...";
+          _status = "Generating answer...";
+        });
 
     final ragPrompt = """
       Please answer only using the context if missing say "The context doesn't contain the answer to your question."
@@ -383,33 +392,67 @@ The future of AI looks very promising with many exciting developments ahead.
       Answer:
     """;
 
+          // -----------------------------------------this is not working good, using a external api for now-----------------------------------------
+        //   final formattedAnswer = await generateAnswer(ragPrompt);
+        //   final promptString = ragPrompt.trim();
+        //   print("Prompt to LLM:\n$promptString"); 
 
-        try {
-          final formattedAnswer = await generateAnswer(ragPrompt);
-          final promptString = ragPrompt.trim();
-          print("Prompt to LLM:\n$promptString"); 
+        //   final tokens = enc.encode(promptString).toList();
+        //   print("First 20 tokens: $tokens");
+        //   setState(() {
+        //     _chatResponse = formattedAnswer;
+        //     _status = "Answer generated.";
+        //   });
+        // //-------------------------------------------------------------------------------------------------------------------------------------
 
-          final tokens = enc.encode(promptString).toList();
-          print("First 20 tokens: $tokens");
+        // --------------------------------API stuff--------------------------------------------------------------------------------------------------
 
-          setState(() {
-            _chatResponse = formattedAnswer;
-            _status = "Q&A done - formatted answer generated.";
-          });
+          final client = http.Client();
+          try {
+            final request = http.Request(
+              "GET",
+              Uri.parse("http://10.0.2.2:8000/chat?query=${Uri.encodeComponent(query)}"),
+            );
+
+            final streamedResponse = await client.send(request);
+
+            if (streamedResponse.statusCode == 200) {
+              print("Response from server:${streamedResponse.statusCode}");
+              // Convert to a UTF8 stream
+              final stream = streamedResponse.stream.transform(utf8.decoder);
+
+              // Listen to chunks and append them to UI
+              await for (final chunk in stream) {
+
+                setState(() {
+                  _chatResponse += chunk;
+                });
+              }
+
+              setState(() {
+                _status = "Streaming finished ✅";
+              });
+            } else {
+              throw Exception("Failed with status ${streamedResponse.statusCode}");
+            }
+          } catch (e) {
+            setState(() {
+              _chatResponse = "❌ Error: $e";
+              _status = "Streaming failed.";
+            });
+          } finally {
+            client.close();
+          }
+        //-----------------------------------------------------------------------------------------------------
+
+          }
         } catch (e) {
           setState(() {
-            _chatResponse = "Error generating answer: $e";
+            _chatResponse = "Error during search: $e";
             _status = "Q&A failed.";
           });
         }
       }
-    } catch (e) {
-      setState(() {
-        _chatResponse = "Error during search: $e";
-        _status = "Q&A failed.";
-      });
-    }
-  }
 
   /// Debug: list files in /enc_files
   Future<void> _listFiles() async {
