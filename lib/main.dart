@@ -4,8 +4,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:samsung_ai/services/embeddings.dart';
 import 'package:samsung_ai/services/vector_store.dart';
-import 'package:flutter_gpt_tokenizer/flutter_gpt_tokenizer.dart';
+import 'package:tiktoken/tiktoken.dart';
 import 'services/crypto_service.dart';
+import 'dart:math' show exp, Random;
 import 'services/pipeline.dart';
 
 void main() {
@@ -33,64 +34,179 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String _status = "Idle";
+  String _status = "Loading model...";
   final TextEditingController _chatController = TextEditingController();
   String _chatResponse = "";
 
   late Interpreter _interpreter;
-  
+  bool _isModelLoaded = false;
+  final enc = getEncoding('gpt2');
 
   @override
   void initState() {
     super.initState();
-    loadModel();
+    _loadModel();
   }
 
-  Future<void> loadModel() async {
-    _interpreter = await Interpreter.fromAsset('assets/models/distilgpt2.tflite');
+  Future<void> _loadModel() async {
+    try {
+      _interpreter = await Interpreter.fromAsset("assets/models/distilgpt2.tflite");
+      debugPrint("✅ DistilGPT-2 model loaded!");
+      setState(() {
+        _isModelLoaded = true;
+        _status = "Model loaded.";
+      });
+    } catch (e) {
+      debugPrint("❌ Error loading model: $e");
+    }
   }
 
   // ---------------------- Helper for GPT-2 ----------------------
- 
 
-  Future<String> generateAnswer(String prompt) async {
-  // Tokenize input
-  final inputIds = prompt.codeUnits;  // List<int>
-  // For TFLite, we need fixed input length, e.g., 128
-  final inputLength = 128;
-  final inputTensor = List.generate(inputLength, (i) => i < inputIds.length ? inputIds[i] : 0);
+  // Replace your generateAnswer function with this fixed version:
 
-  // Output shape is [1, 128, 50257] (batch, sequence, vocab)
-  final outputTensor = List.generate(
-    1,
-    (_) => List.generate(
-      128,
-      (_) => List.filled(50257, 0.0),
-    ),
-  );
+Future<String> generateAnswer(String prompt, {int maxGenLen = 32}) async {
+  if (!_isModelLoaded) throw Exception("Model not loaded yet.");
 
-  // Run TFLite model
-  _interpreter.run([inputTensor], outputTensor);
+  List<int> tokens = enc.encode(prompt).toList();
+  print("Original tokens: ${tokens.take(10).toList()}...");
 
-  // Extract predicted token IDs using argmax on the vocab dimension
-  List<int> predictedIds = [];
-  for (int i = 0; i < 128; i++) {
-    List<double> logits = outputTensor[0][i];  // Correct: batch 0, position i
-    int maxIndex = 0;
-    double maxValue = logits[0];
-    for (int j = 1; j < logits.length; j++) {
-      if (logits[j] > maxValue) {
-        maxValue = logits[j];
-        maxIndex = j;
-      }
+  // CRITICAL FIX: DistilGPT-2 typically has vocab size 50257, but let's be safe
+  const int modelVocabSize = 50257; // Standard GPT-2 vocab size
+  const int eosToken = 50256;
+  
+  // Validate and clamp initial tokens
+  tokens = tokens.map((token) {
+    if (token < 0 || token >= modelVocabSize) {
+      print("Warning: Invalid token $token, replacing with 0 (pad)");
+      return 0; // Use pad token as fallback
     }
-    predictedIds.add(maxIndex);
+    return token;
+  }).toList();
+
+  print("Validated tokens: ${tokens.take(10).toList()}...");
+
+  // Limit initial prompt length to avoid memory issues
+  if (tokens.length > 100) {
+    tokens = tokens.sublist(tokens.length - 100); // Keep last 100 tokens
+    print("Truncated to last ${tokens.length} tokens");
   }
 
+  for (int step = 0; step < maxGenLen; step++) {
+    try {
+      int curLen = tokens.length;
+      
+      // Prepare input - no need for separate padding, use tokens as-is
+      var input = [tokens];
 
-  // Detokenize output
-  return String.fromCharCodes(predictedIds.where((id) => id != 0));
+      // Resize to current length dynamically
+      _interpreter.resizeInputTensor(0, [1, curLen]);
+      _interpreter.allocateTensors();
+
+      // Output [1, curLen, vocabSize]
+      var output = List.generate(
+          1,
+          (_) => List.generate(
+              curLen, (_) => List<double>.filled(modelVocabSize, 0.0)));
+
+      _interpreter.run(input, output);
+
+      // Get logits for the last token only
+      final lastLogits = output[0][curLen - 1];
+
+      // Apply temperature and pick next token
+      int nextId = _sampleToken(lastLogits, temperature: 0.8);
+      
+      // Validate the predicted token
+      if (nextId < 0 || nextId >= modelVocabSize) {
+        print("Warning: Model predicted invalid token $nextId, stopping generation");
+        break;
+      }
+
+      tokens.add(nextId);
+      
+      if (nextId == eosToken) {
+        print("EOS token encountered, stopping generation");
+        break;
+      }
+
+      // Safety check: prevent runaway generation
+      if (tokens.length > 200) {
+        print("Maximum token length reached, stopping generation");
+        break;
+      }
+
+    } catch (e) {
+      print("Error during generation step $step: $e");
+      break;
+    }
+  }
+
+  try {
+    final result = enc.decode(tokens);
+    print("Generated text length: ${result.length}");
+    return result;
+  } catch (e) {
+    print("Error decoding tokens: $e");
+    return "Error generating response: $e";
+  }
 }
+
+/// Improved token sampling with temperature
+int _sampleToken(List<double> logits, {double temperature = 1.0}) {
+  if (temperature <= 0.0) {
+    return _argmax(logits);
+  }
+
+  // Apply temperature
+  final scaledLogits = logits.map((x) => x / temperature).toList();
+  
+  // Find max for numerical stability
+  final maxLogit = scaledLogits.reduce((a, b) => a > b ? a : b);
+  
+  // Compute softmax probabilities
+  final expLogits = scaledLogits.map((x) => exp(x - maxLogit)).toList();
+  final sumExp = expLogits.reduce((a, b) => a + b);
+  final probs = expLogits.map((x) => x / sumExp).toList();
+  
+  // Sample from top-k tokens for better quality
+  final topK = 50;
+  final indexedProbs = probs
+      .asMap()
+      .entries
+      .map((e) => {'index': e.key, 'prob': e.value})
+      .toList();
+
+  indexedProbs.sort((a, b) => b['prob']?.compareTo(a['prob'] ?? 0) ?? 0);
+  final topKProbs = indexedProbs.take(topK).toList();
+  
+  // Simple random selection from top-K (you might want a proper random generator)
+  final rng = Random();
+  final r = rng.nextDouble();
+  double cumProb = 0;
+  for (var t in topKProbs) {
+    cumProb += t['prob'] as double;
+    if (r < cumProb) return t['index'] as int;
+  }
+  return topKProbs.first['index'] as int; // fallback
+  }
+
+/// Helper to pick max index (fallback for temperature=0)
+int _argmax(List<double> logits) {
+  int maxIndex = 0;
+  double maxVal = logits[0];
+  for (int i = 1; i < logits.length; i++) {
+    if (logits[i] > maxVal) {
+      maxVal = logits[i];
+      maxIndex = i;
+    }
+  }
+  return maxIndex;
+}
+
+// Add this import to your main file:
+
+
 
   // ---------------------------------------------------------------
 
@@ -123,7 +239,7 @@ The future of AI looks very promising with many exciting developments ahead.
     setState(() => _status = "Created test file at ${file.path}");
   }
 
-  /// Encrypt all `.txt` files in /enc_files → `.enc`
+  /// Encrypt all .txt files in /enc_files → .enc
   Future<void> _encryptAll() async {
     setState(() => _status = "Encrypting files...");
     final dirPath = await _appDirPath();
@@ -158,7 +274,7 @@ The future of AI looks very promising with many exciting developments ahead.
     setState(() => _status = "Encrypted $successCount/${files.length} files");
   }
 
-  /// Decrypt all `.enc` files in /enc_files → restore original `.txt`
+  /// Decrypt all .enc files in /enc_files → restore original .txt
   Future<void> _decryptAll() async {
     setState(() => _status = "Decrypting files...");
     final dirPath = await _appDirPath();
@@ -195,10 +311,14 @@ The future of AI looks very promising with many exciting developments ahead.
   Future<void> _runPipeline() async {
     setState(() => _status = "Running pipeline...");
     try {
-      final pipeline = Pipeline(aesKey32: List.filled(32, 1)); // dummy key for now
+      final pipeline = Pipeline(
+        aesKey32: List.filled(32, 1),
+      ); // dummy key for now
       final result = await pipeline.run();
-      setState(() => _status =
-          "Pipeline done: ${result.totalChunks} chunks, ${result.totalEmbeddings} embeddings, refreshed=${result.refreshed}");
+      setState(
+        () => _status =
+            "Pipeline done: ${result.totalChunks} chunks, ${result.totalEmbeddings} embeddings, refreshed=${result.refreshed}",
+      );
     } catch (e) {
       setState(() => _status = "Pipeline failed: $e");
     }
@@ -209,16 +329,33 @@ The future of AI looks very promising with many exciting developments ahead.
     final query = _chatController.text.trim();
     if (query.isEmpty) return;
 
+    // Check if model is loaded before proceeding
+    if (!_isModelLoaded) {
+      setState(() {
+        _chatResponse = "Model is still loading. Please wait...";
+        _status = "Model not ready yet.";
+      });
+      return;
+    }
+
     setState(() => _status = "Searching embeddings...");
 
     try {
       final embeddings = await Embeddings.load();
+    
+    // VALIDATE THE MODEL FIRST
+    final isValid = await embeddings.validateModel();
+    if (!isValid) {
+      setState(() {
+        _chatResponse = "Model validation failed. Check tokenizer compatibility.";
+        _status = "Model validation error.";
+      });
+      return;
+    }
+
       final store = await VectorStore.open(embedSize: 384);
 
-      // Embed single query
       final queryVec = embeddings.embedTexts([query])[0];
-
-      // Get top K results
       final results = await store.search(queryVec, topK: 3);
       await store.close();
 
@@ -228,12 +365,33 @@ The future of AI looks very promising with many exciting developments ahead.
           _status = "Q&A done.";
         });
       } else {
-        // Combine chunks into context string
-        final context = results.map((r) => r.text).join("\n\n");
+        final cleanedContext = results.map((r) => r.text
+        .replaceAll(RegExp(r'[^a-zA-Z0-9\s\.,!?]'), '')  // Remove special symbols
+        .replaceAll(RegExp(r'\s+'), ' ')  // Normalize spaces
+        .trim()
+    ).join("\n\n").trim();
 
-        // Generate formatted answer using DistilGPT-2 TFLite
+    if (cleanedContext.isEmpty) {
+      setState(() => _chatResponse = "The context doesn't contain the answer to your question.");
+      return;
+    }
+
+    final ragPrompt = """
+      Please answer only using the context if missing say "The context doesn't contain the answer to your question."
+      Context: $cleanedContext
+      Question: $query
+      Answer:
+    """;
+
+
         try {
-          final formattedAnswer = await generateAnswer(context);
+          final formattedAnswer = await generateAnswer(ragPrompt);
+          final promptString = ragPrompt.trim();
+          print("Prompt to LLM:\n$promptString"); 
+
+          final tokens = enc.encode(promptString).toList();
+          print("First 20 tokens: $tokens");
+
           setState(() {
             _chatResponse = formattedAnswer;
             _status = "Q&A done - formatted answer generated.";
@@ -309,8 +467,8 @@ The future of AI looks very promising with many exciting developments ahead.
               const SizedBox(height: 12),
               ElevatedButton.icon(
                 icon: const Icon(Icons.question_answer),
-                label: const Text("Ask"),
-                onPressed: _askQuestion,
+                label: Text(_isModelLoaded ? "Ask" : "Loading Model..."),
+                onPressed: _isModelLoaded ? _askQuestion : null,
               ),
               const SizedBox(height: 12),
               if (_chatResponse.isNotEmpty)
@@ -340,7 +498,10 @@ The future of AI looks very promising with many exciting developments ahead.
                 ),
                 child: Text(
                   _status,
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ),

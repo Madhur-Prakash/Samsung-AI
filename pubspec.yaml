@@ -37,8 +37,7 @@ dependencies:
   tflite_flutter: ^0.9.0  # TFLite inference
   collection: ^1.18.0
   huggingface_dart: ^0.0.2
-  flutter_gpt_tokenizer: ^0.1.1
-
+  tiktoken: ^1.0.3
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
@@ -64,6 +63,8 @@ flutter:
     # Embedding model (you provide this file)
     - assets/models/sentence_transformer.tflite
     - assets/models/distilgpt2.tflite
+    - assets/models/mobilebert_quant_384_20200602.tflite
+    - assets/models/mobilebert_float_384_20200602.tflite
     # WordPiece vocab for tokenizer (you provide vocab.txt from the model)
     - assets/tokenizer/vocab.txt
     - assets/enc_files/
