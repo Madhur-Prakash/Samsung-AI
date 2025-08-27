@@ -9,12 +9,11 @@ The RAG Query Module powers ListenIQ with offline, privacy-first semantic search
 ## Architecture
 
 ```
-User Query → Semantic Search (SQLite) → Context Retrieval →
-Prompt Structuring → LLM Processing → Contextual Response
+User Query → Semantic Search (SQLite) → Context Retrieval → Prompt Structuring → LLM Processing → Contextual Response
 ```
 ---
 
-# Core Components
+## Core Components
 
 The system is architected around four primary components that work in tandem to deliver intelligent, context-aware responses while maintaining strict privacy and efficiency standards. Each component is optimized for edge deployment, ensuring low-latency processing without cloud dependencies.
 

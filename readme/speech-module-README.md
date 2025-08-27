@@ -1,23 +1,22 @@
 # Speech Intelligence Module
 
-**Real-time Speech Recognition & Contextual Storage System**
-
 ---
 
 ## Overview
 
-The Speech Intelligence Module is the core component of ListenIQ that captures, processes, and stores user speech data entirely on-device. This module ensures continuous speech monitoring while maintaining complete privacy through local processing and encrypted storage.
+The Speech Intelligence Module is a Flutter-based component designed for real-time speech-to-text (STT) conversion. It leverages the speech_to_text package to capture audio input from the device's microphone, process it in real-time, and output transcribed text. This module is ideal for integrating voice recognition into AI-powered mobile applications, such as virtual assistants, note-taking apps, or accessibility tools.
 
 ---
 
 ## Architecture
 
 ```
-Audio Input → Vosk Recognition → Text Processing → Tokenization → 
-Chunking → Encryption → File Storage → Embedding Generation → Vector DB Storage
+Audio Input → Flutter STT Recognition → Text Processing → Tokenization → Chunking → Encryption → File Storage → Embedding Generation → Vector DB Storage
 ```
 
-### Core Components
+---
+
+## Core Components
 
 1. **Audio Capture Layer**
    - Continuous microphone monitoring
