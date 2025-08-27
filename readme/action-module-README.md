@@ -1,7 +1,5 @@
 # Object/Action Detection Module 
 
----
-
 ## Overview
 
 The Object/Action Detection Module integrates three core AI modalities—object detection, speech transcription, and action recognition—to deliver a comprehensive, contextual interpretation of dynamic environments. By fusing visual data from object detection and action recognition with auditory insights from speech processing, it enables real-time scene analysis that goes beyond single-modality limitations. This fusion supports applications in assistive technologies, smart environments, and advanced video analytics, providing a holistic understanding of activities, interactions, and contexts.
