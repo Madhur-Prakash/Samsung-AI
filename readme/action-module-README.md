@@ -13,11 +13,11 @@ The model is designed for efficiency, running on standard hardware with real-tim
 # Components
 
 ## Object Detection
-The object detection module forms the visual foundation of the model, focusing on identifying and localizing objects in real-time video frames. It employs **YOLOv8s**, a state-of-the-art model from the YOLO (You Only Look Once) family, known for its balance of speed and accuracy in detecting multiple objects simultaneously.
+The object detection module forms the visual foundation of the model, focusing on identifying and localizing objects in real-time video frames. It employs **YoloV8s-oiv7**, a state-of-the-art model from the YOLO (You Only Look Once) family, known for its balance of speed and accuracy in detecting multiple objects simultaneously.
 
-- **Model Architecture and Weights**: YOLOv8s is a compact variant of YOLOv8, featuring a scaled-down backbone and head for efficient inference. It uses custom weights from the `yolov8s-oiv7.pt` file, which are pre-trained on the Open Images V7 dataset. This customization enhances detection for a wide range of everyday objects, improving generalization across diverse scenes.
+- **Model Architecture and Weights**: YoloV8s-oiv7 is a compact variant of YoloV8s, featuring a scaled-down backbone and head for efficient inference. It uses custom weights from the `YoloV8s-oiv7.pt` file, which are pre-trained on the Open Images V7 dataset. This customization enhances detection for a wide range of everyday objects, improving generalization across diverse scenes.
 - **Detection Process**: For each incoming frame, the model performs single-pass inference, outputting bounding boxes (rectangular coordinates defining object locations), class labels (e.g., "person", "chair", "apple"), and confidence scores (probabilities indicating detection reliability, typically thresholded at 0.5 or higher). It also extracts additional features like object size (calculated from bounding box dimensions) and position (relative coordinates within the frame, such as center x/y or quadrant placement).
-- **Performance Characteristics**: YOLOv8s achieves real-time speeds of around 30–60 FPS on mid-range GPUs, with mean average precision (mAP) scores often exceeding 50% on benchmarks like COCO. The custom `oiv7` weights optimize for open-vocabulary detection, allowing recognition of thousands of object classes without exhaustive retraining.
+- **Performance Characteristics**: YoloV8s-oiv7 achieves real-time speeds of around 30–60 FPS on mid-range GPUs, with mean average precision (mAP) scores often exceeding 50% on benchmarks like COCO. The custom `oiv7` weights optimize for open-vocabulary detection, allowing recognition of thousands of object classes without exhaustive retraining.
 - **Integration Benefits**: These outputs provide spatial and semantic context, enabling the model to infer relationships like "a person holding a phone" by analyzing proximity and overlap of bounding boxes.
 
 ## Action Recognition
@@ -47,7 +47,7 @@ Fusion is the core innovation, combining multimodal outputs into a unified scene
 The pipeline operates in parallel threads for efficiency, ensuring real-time performance.
 
 1. **Input Capture**: Video from camera (e.g., OpenCV) at 30 FPS; audio via Wave and Vosk.
-2. **Object Detection (Frame-level)**: Preprocess (resize, normalize), infer with YOLOv8s, extract features.
+2. **Object Detection (Frame-level)**: Preprocess (resize, normalize), infer with YoloV8s-oiv7, extract features.
 3. **Action Recognition (Clip-level)**: Buffer frames, preprocess clips, infer with CNN-GRU.
 4. **Speech Processing (Stream-level)**: Stream audio, recognize with Vosk, classify text.
 5. **Fusion Stage (Scene Interpreter)**: Aggregate buffered data, apply rules, compute scores.
@@ -58,7 +58,7 @@ The diagram illustrates this flow, emphasizing parallelism.
 # Model Pipeline Diagram
 ```
 Video Stream
-├── Frame-by-frame ──► Object Detection (YOLOv8s-oiv7)
+├── Frame-by-frame ──► Object Detection (YoloV8s-oiv7)
 │
 └── Clip buffer of 16 frames ──► Action Recognition (CNN-GRU)
 

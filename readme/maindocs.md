@@ -12,7 +12,7 @@
 
 ## Advanced Object/Action Detection
 
-- **YOLO v8 Small Model**: Trained on UCF101 dataset for real-time action recognition
+- **YoloV8s-oiv7 Small Model**: Trained on UCF101 dataset for real-time action recognition
 - **Supported Actions**: CricketShot, PlayingCello, Punch, ShavingBeard, TennisSwing
 - **MobileNet v2 Processing**: Efficient mobile-optimized inference
 - **Context Generation**: Automatic text file creation from detected actions
@@ -66,7 +66,7 @@ Chunking → Encryption → File Storage → Embedding Generation → Vector DB
 ### Module 2: Action/Object Detection Pipeline
 
 ```
-Video/Camera Input → YOLO v8 Detection → MobileNet v2 Processing →
+Video/Camera Input → YoloV8s-oiv7 Detection → MobileNet v2 Processing →
 Action/Object Classification → Context Generation → Text File Creation →
 Embedding Storage → Vector Database
 ```
@@ -82,7 +82,7 @@ Prompt Structuring → LLM Processing → Contextual Response
 
 # Model Details & Performance
 
-## YOLO v8 Small Configuration
+## YoloV8s-oiv7 Small Configuration
 
 ### Dataset Information
 | Attribute | Details |
@@ -241,7 +241,7 @@ Prompt Structuring → LLM Processing → Contextual Response
 ### Resource Management
 | Component | Peak Memory | Storage Requirements | CPU Usage |
 |-----------|-------------|---------------------|-----------|
-| **YOLO v8 Small** | 50MB | 22MB model file | 15-25% |
+| **YoloV8s-oiv7 Small** | 50MB | 22MB model file | 15-25% |
 | **Vosk Speech** | 100MB | 50MB language model | 10-20% |
 | **MiniLM Embeddings** | 30MB | 22MB TFLite model | 5-15% |
 | **FFmpeg Processing** | 100MB | Temporary files | 20-40% |
@@ -333,7 +333,7 @@ dependencies:
 Follow the steps below to set up the required models:
 
 
-1. **YOLO v8 Small (Object/Action Recognition)**  
+1. **YoloV8s-oiv7 Small (Object/Action Recognition)**  
    [Download from Hugging Face](https://huggingface.co/Ultralytics/YOLOv8)  
 
 2. **Vosk Speech Recognition Models**  

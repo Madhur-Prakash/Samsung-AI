@@ -32,20 +32,20 @@ All models utilized are **open-source** and publicly available:
 
 | Model | Category | License | Purpose | Key Features | Performance | Repository |
 |-------|----------|---------|---------|--------------|-------------|------------|
-| **[YOLO v8 Small](https://huggingface.co/Ultralytics/YOLOv8)** | Core AI Models | GPL-3.0 | Real-time object and action detection | Fine-tuned on UCF101 dataset for 5 action categories | <100ms inference time on mobile devices | [Ultralytics YOLO](https://github.com/ultralytics/ultralytics) |
+| **[YoloV8s-oiv7 Small](https://huggingface.co/Ultralytics/YOLOv8)** | Core AI Models | GPL-3.0 | Real-time object and action detection | Fine-tuned on UCF101 dataset for 5 action categories | <100ms inference time on mobile devices | [Ultralytics YOLO](https://github.com/ultralytics/ultralytics) |
 | **[MobileNet v2](https://huggingface.co/docs/transformers/en/model_doc/mobilenet_v2)** | Core AI Models | Apache 2.0 | Efficient video processing backbone | TensorFlow Lite quantized for mobile deployment | <50MB model size | [TensorFlow Models](https://github.com/tensorflow/models) |
 | **[Vosk API](https://github.com/alphacep/vosk-api)** | Speech Processing | Apache 2.0 | Offline speech-to-text recognition | 20+ language models supported, complete offline operation | Real-time streaming recognition with zero latency, 50MB model size | [Vosk API](https://github.com/alphacep/vosk-api) |
 | **[OLLAMA all-MiniLM-L6-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2)** | Natural Language Processing | Apache 2.0 | Sentence embeddings for RAG implementation | PyTorch → TensorFlow Lite conversion, 384-dimensional embeddings | <50ms inference per sentence on mobile CPU | [Sentence Transformers](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2) |
 
-> *Note: YOLO v8 offers dual licensing—AGPL-3.0 for open-source use and an Enterprise License for commercial applications.*
+> *Note: YoloV8s-oiv7 offers dual licensing—AGPL-3.0 for open-source use and an Enterprise License for commercial applications.*
 
 ## Datasets Used
 *All datasets are publicly available under open licenses:*
 
 | **Dataset** | **License** | **Purpose** | **Size** | **Usage** | **Source/Provider** |
 |-------------|-------------|-------------|----------|-----------|----------------------|
-| [UCF101 Action Recognition](https://www.kaggle.com/datasets/abdallahwagih/ucf101-videos) | Creative Commons License | Training YOLO v8 for action detection | 13,320 videos across 101 categories | 5 selected categories for mobile optimization | University of Central Florida |
-| [Open Images v7](https://storage.googleapis.com/openimages/web/index.html) | Creative Commons BY 4.0 | Pre-training foundation for YOLO v8 object detection | 9M+ images with detailed annotations | Indirect - model pre-training foundation | Google Research |
+| [UCF101 Action Recognition](https://www.kaggle.com/datasets/abdallahwagih/ucf101-videos) | Creative Commons License | Training YoloV8s-oiv7 for action detection | 13,320 videos across 101 categories | 5 selected categories for mobile optimization | University of Central Florida |
+| [Open Images v7](https://storage.googleapis.com/openimages/web/index.html) | Creative Commons BY 4.0 | Pre-training foundation for YoloV8s-oiv7 object detection | 9M+ images with detailed annotations | Indirect - model pre-training foundation | Google Research |
 
 ---
 
@@ -87,7 +87,7 @@ This project builds upon several **open-source projects** while contributing nov
 
 ## Open Source Licenses
 - **Flutter Framework**: BSD 3-Clause License
-- **YOLO v8**: GPL-3.0 License  
+- **YoloV8s-oiv7**: GPL-3.0 License  
 - **Vosk API**: Apache 2.0 License
 - **FFmpeg**: LGPL/GPL License
 - **TensorFlow Lite**: Apache 2.0 License
@@ -103,7 +103,7 @@ This project builds upon several **open-source projects** while contributing nov
 ### Industry Partners
 - **Samsung Research**: For organizing the EnnovateX 2025 AI Challenge and providing the vision for on-device personal AI assistants
 - **Google AI Edge**: For developing and open-sourcing ai-edge-torch conversion tools that enable mobile AI deployment
-- **Ultralytics**: For the YOLO v8 framework, comprehensive documentation, and active community support
+- **Ultralytics**: For the YoloV8s-oiv7 framework, comprehensive documentation, and active community support
 
 ### Academic Contributors  
 - **University of Central Florida**: For creating and maintaining the UCF101 action recognition dataset
@@ -130,7 +130,7 @@ This project builds upon several **open-source projects** while contributing nov
 - **Tokenized Storage**: Secure chunking and encrypted file system storage
 
 ### 🎯 **Advanced Action Detection Pipeline**
-- **Multi-Modal Fusion**: YOLO v8 + MobileNet v2 integration for comprehensive action understanding
+- **Multi-Modal Fusion**: YoloV8s-oiv7 + MobileNet v2 integration for comprehensive action understanding
 - **Context Generation**: Automatic text file creation from detected visual actions
 - **Mobile Optimization**: Custom quantization for real-time mobile inference
 
