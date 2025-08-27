@@ -1,7 +1,5 @@
 # RAG Query Module
 
----
-
 ## Overview
 
 The RAG Query Module powers ListenIQ with offline, privacy-first semantic search and context-aware response generation. By combining locally stored vector embeddings with an on-device LLM, it enables users to query and retrieve insights directly from their captured speech and action history—ensuring responses are accurate, contextual, and fully private without relying on external servers.
