@@ -19,139 +19,191 @@ Audio Input → Flutter STT Recognition → Text Processing → Tokenization →
 ## Core Components
 
 1. **Audio Capture Layer**
-   - Continuous microphone monitoring
-   - Real-time audio stream processing
-   - Background operation with minimal battery impact
+
+Purpose: Continuously monitor and capture microphone input with minimal impact on device resources.
+
+- Continuous Microphone Monitoring
+
+  - Runs as a background service (Flutter: Isolate, Android: ForegroundService)
+
+  - Automatically restarts on interruption (e.g., call, screen off)
+
+- Real-Time Audio Stream Processing
+
+  - Buffer size tuning (e.g., 20 ms frames) for low latency
+
+  - On-device pre-processing (noise suppression, AGC) via WebRTC or libwebrtc plugin
+
+- Battery & Resource Optimization
+
+  - Duty-cycle management: adapt sampling rate on idle vs. active periods
+
+  - Native code integration (Android NDK / iOS Accelerate) to offload work
 
 2. **Speech Recognition Engine**
-   - Vosk offline speech recognition
-   - Multi-language support (20+ languages)
-   - Zero-latency processing
+
+Purpose: Perform offline, zero-latency transcription in multiple languages.
+
+- On-device speech recognition using Flutter STT package
+
+  - Supports Real-time transcription
+
+- Zero-Latency Processing
+
+  - Stream API: incremental results via Vosk’s PartialResult callbacks
 
 3. **Text Processing Pipeline**
-   - Sentence segmentation
-   - Tokenization and normalization  
-   - Sensitive data filtering
+
+Purpose: Clean, segment, and filter raw transcripts into secure, structured data.
+
+- Sentence Segmentation
+
+  - Rule-based splitter (e.g., ICU BreakIterator) for boundary detection
+
+- Tokenization & Normalization
+
+  - Lowercasing, accent removal, punctuation trimming
+
+  - Optional stemming/lemmatization via Snowball or spaCy
+
+- Sensitive Data Filtering
+
+  - Regex-based detectors (emails, phone numbers, SSNs)
+
+  - Customizable whitelists/blacklists
 
 4. **Storage & Security Layer**
-   - AES encryption for text files
-   - Chunked storage for efficient retrieval
-   - SQLite vector database integration
+
+Purpose: Securely persist, index, and retrieve transcripts and metadata.
+
+- AES Encryption for Text Files
+
+  - AES-256-GCM mode for confidentiality + integrity
+
+- Chunked Storage
+
+  - Small file sizes (e.g., 1 kB / 5 sentences)
 
 ---
 
-## 🛠️ Technical Implementation
+## Technical Implementation
 
-### Speech Recognition Configuration
-
-```dart
-// Vosk model initialization
-class SpeechRecognitionService {
-  late VoskFlutterPlugin _vosk;
-  late Model _model;
-  
-  Future<void> initializeModel() async {
-    _model = await Vosk.createModel("assets/models/vosk-model-small-en-us");
-    _vosk = VoskFlutterPlugin.instance();
-  }
-  
-  Stream<String> startListening() {
-    return _vosk.speechResultStream();
-  }
-}
-```
-
-### Text Processing & Encryption
+### Initialize the SpeechToText instance
 
 ```dart
-class TextProcessor {
-  static const int CHUNK_SIZE = 512;
-  
-  Future<List<String>> processAndChunk(String rawText) async {
-    // Tokenization
-    List<String> tokens = rawText.split(' ');
-    
-    // Sensitive data filtering
-    tokens = await filterSensitiveData(tokens);
-    
-    // Chunking
-    return createChunks(tokens, CHUNK_SIZE);
-  }
-  
-  Future<String> encryptText(String text) async {
-    final key = await getEncryptionKey();
-    final encrypted = AES(key).encrypt(text);
-    return encrypted.base64;
-  }
-}
-```
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 
-### Vector Embedding Generation
+class SpeechIntelligence {
+  late stt.SpeechToText _speechToText;
+  bool _isListening = false;
+  String _transcribedText = '';
 
-```dart
-class EmbeddingService {
-  late Interpreter _interpreter;
-  
-  Future<void> loadModel() async {
-    _interpreter = await Interpreter.fromAsset(
-      'assets/models/all-minilm-l6-v2.tflite'
+  SpeechIntelligence() {
+    _speechToText = stt.SpeechToText();
+  }
+
+  Future<bool> initialize() async {
+    return await _speechToText.initialize(
+      onStatus: (status) => print('Status: $status'),
+      onError: (error) => print('Error: $error'),
     );
   }
-  
-  Future<List<double>> generateEmbedding(String text) async {
-    // Tokenize input text
-    var input = tokenizeText(text);
-    
-    // Run inference
-    var output = List.generate(384, (index) => 0.0);
-    _interpreter.run([input], [output]);
-    
-    return output;
+}
+```
+---
+
+### Start Listening
+
+```dart
+Future<void> startListening() async {
+  if (!_isListening) {
+    bool available = await initialize();
+    if (available) {
+      _isListening = true;
+      _speechToText.listen(
+        onResult: (result) {
+          _transcribedText = result.recognizedWords;
+          // Handle partial or final results here
+        },
+        listenFor: const Duration(seconds: 30),  // Max duration
+        pauseFor: const Duration(seconds: 5),    // Pause after silence
+        localeId: 'en_US',                      // Set locale
+      );
+    }
   }
 }
 ```
 
 ---
 
-## Configuration Options
+### Stopping Recognition
 
-### Model Settings
-```yaml
-# Vosk Model Configuration
-vosk_model:
-  language: "en-us"
-  model_size: "small"  # small, medium, large
-  sample_rate: 16000
+```dart
+void stopListening() {
+  _speechToText.stop();
+  _isListening = false;
+}
+```
+---
+
+### Privacy Safeguards
+```dart
+class PrivacyManager {
+  // Automatic data expiration
+  static const Duration DATA_RETENTION = Duration(days: 30);
   
-# Text Processing
-text_processing:
-  chunk_size: 512
-  overlap: 50
-  min_sentence_length: 10
+  // Secure deletion
+  static Future<void> secureDelete(String filePath) async {
+    final file = File(filePath);
+    if (await file.exists()) {
+      // Overwrite with random data before deletion
+      await file.writeAsBytes(generateRandomBytes(await file.length()));
+      await file.delete();
+    }
+  }
   
-# Encryption
-encryption:
-  algorithm: "AES-256-GCM"
-  key_derivation: "PBKDF2"
-  iterations: 100000
+  // Data anonymization
+  static String anonymizeText(String text) {
+    return text.replaceAllMapped(
+      RegExp(r'\b[A-Z][a-z]+\b'), // Names
+      (match) => generateAnonymousName()
+    );
+  }
+}
 ```
 
-### Privacy Filters
-```dart
-class SensitiveDataFilter {
-  static final List<RegExp> sensitivePatterns = [
-    RegExp(r'\b\d{4}[-\s]?\d{4}[-\s]?\d{4}[-\s]?\d{4}\b'), // Credit cards
-    RegExp(r'\b\d{3}-\d{2}-\d{4}\b'),                        // SSN
-    RegExp(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'), // Email
-    RegExp(r'\b\d{3}[-.]?\d{3}[-.]?\d{4}\b'),               // Phone numbers
-  ];
-  
-  static String filterSensitiveData(String text) {
-    String filtered = text;
-    for (var pattern in sensitivePatterns) {
-      filtered = filtered.replaceAll(pattern, '[REDACTED]');
-    }
-    return filtered;
+---
+
+### Full Example
+
+``dart
+class SpeechWidget extends StatefulWidget {
+  @override
+  _SpeechWidgetState createState() => _SpeechWidgetState();
+}
+
+class _SpeechWidgetState extends State<SpeechWidget> {
+  final SpeechIntelligence _speech = SpeechIntelligence();
+  String _text = 'Press to speak';
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(_text),
+        ElevatedButton(
+          onPressed: () async {
+            if (!_speech._isListening) {
+              await _speech.startListening();
+            } else {
+              _speech.stopListening();
+            }
+            setState(() => _text = _speech._transcribedText);
+          },
+          child: Text(_speech._isListening ? 'Stop' : 'Start'),
+        ),
+      ],
+    );
   }
 }
 ```
@@ -188,77 +240,6 @@ class SensitiveDataFilter {
 - **Secure Storage**: Android Keystore / iOS Keychain integration
 - **Memory Protection**: Secure memory allocation for sensitive data
 
-### Privacy Safeguards
-```dart
-class PrivacyManager {
-  // Automatic data expiration
-  static const Duration DATA_RETENTION = Duration(days: 30);
-  
-  // Secure deletion
-  static Future<void> secureDelete(String filePath) async {
-    final file = File(filePath);
-    if (await file.exists()) {
-      // Overwrite with random data before deletion
-      await file.writeAsBytes(generateRandomBytes(await file.length()));
-      await file.delete();
-    }
-  }
-  
-  // Data anonymization
-  static String anonymizeText(String text) {
-    return text.replaceAllMapped(
-      RegExp(r'\b[A-Z][a-z]+\b'), // Names
-      (match) => generateAnonymousName()
-    );
-  }
-}
-```
-
----
-
-## Usage Examples
-
-### Basic Speech Recognition
-```dart
-class SpeechScreen extends ConsumerWidget {
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final speechService = ref.watch(speechServiceProvider);
-    
-    return StreamBuilder<String>(
-      stream: speechService.speechStream,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return Text('Recognized: ${snapshot.data}');
-        }
-        return CircularProgressIndicator();
-      },
-    );
-  }
-}
-```
-
-### Embedding Storage
-```dart
-class SpeechStorage {
-  static Future<void> storeProcessedSpeech(String text) async {
-    // Process and encrypt
-    final chunks = await TextProcessor.processAndChunk(text);
-    final encrypted = await Future.wait(
-      chunks.map((chunk) => TextProcessor.encryptText(chunk))
-    );
-    
-    // Generate embeddings
-    final embeddings = await Future.wait(
-      chunks.map((chunk) => EmbeddingService.generateEmbedding(chunk))
-    );
-    
-    // Store in vector database
-    await VectorDB.insertBatch(encrypted, embeddings);
-  }
-}
-```
-
 ---
 
 ## Testing & Validation
@@ -283,12 +264,6 @@ void main() {
   });
 }
 ```
-
-### Performance Benchmarks
-- **Recognition Accuracy**: 95%+ on clear audio
-- **Processing Speed**: Real-time (1:1 ratio)
-- **Memory Efficiency**: <200MB peak usage
-- **Storage Optimization**: 70% compression ratio
 
 ---
 
@@ -332,26 +307,6 @@ class PermissionService {
 
 ---
 
-## Configuration Files
-
-### Model Configuration (`speech_config.yaml`)
-```yaml
-speech_recognition:
-  model_path: "assets/models/vosk-model-small-en-us"
-  sample_rate: 16000
-  buffer_size: 4096
-  
-text_processing:
-  chunk_size: 512
-  overlap: 50
-  min_length: 10
-  
-storage:
-  max_files: 1000
-  retention_days: 30
-  encryption_enabled: true
-```
-
 ### Database Schema
 ```sql
 CREATE TABLE speech_chunks (
@@ -367,35 +322,6 @@ CREATE TABLE speech_chunks (
 CREATE INDEX idx_timestamp ON speech_chunks(timestamp);
 CREATE INDEX idx_embedding ON speech_chunks(embedding);
 ```
-
----
-
-## Error Handling
-
-### Common Issues & Solutions
-
-**Issue**: Recognition accuracy drops in noisy environments
-```dart
-class NoiseFilter {
-  static Future<Uint8List> applyNoiseReduction(Uint8List audioData) async {
-    // Implement spectral subtraction
-    return processedAudio;
-  }
-}
-```
-
-**Issue**: Memory usage spikes during long sessions
-```dart
-class MemoryManager {
-  static Future<void> optimizeMemory() async {
-    // Clear old buffers
-    await clearAudioBuffers();
-    // Compress stored embeddings
-    await compressOldEmbeddings();
-  }
-}
-```
-
 ---
 
 ## Future Enhancements
