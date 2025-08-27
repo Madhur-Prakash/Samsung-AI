@@ -13,7 +13,7 @@ User Query → Semantic Search (SQLite) → Context Retrieval → Prompt Structu
 ```
 ---
 
-## Core Components
+# Core Components
 
 The system is architected around four primary components that work in tandem to deliver intelligent, context-aware responses while maintaining strict privacy and efficiency standards. Each component is optimized for edge deployment, ensuring low-latency processing without cloud dependencies.
 

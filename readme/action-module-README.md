@@ -15,7 +15,7 @@ Video/Camera Input → YoloV8s-oiv7 Detection → MobileNet v2 Processing → Ac
 ```
 
 ---
-## Core Components
+# Core Components
 
 ## Object Detection
 The object detection module forms the visual foundation of the model, focusing on identifying and localizing objects in real-time video frames. It employs **YoloV8s-oiv7**, a state-of-the-art model from the YOLO (You Only Look Once) family, known for its balance of speed and accuracy in detecting multiple objects simultaneously.
