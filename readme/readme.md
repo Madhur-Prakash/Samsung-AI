@@ -8,8 +8,11 @@
 
 ## Team Members
 - **Member 1**: Nandika Gupta
+
 - **Member 2**: Madhur Prakash Mangal
+
 - **Member 3**: Nidhi Singh
+
 - **Member 4**: Pranav Sharma
 
 ---
@@ -107,17 +110,24 @@ This project builds upon several **open-source projects** while contributing nov
 
 ## Open Source Licenses
 - **Flutter Framework**: BSD 3-Clause License
+
 - **YoloV8s-oiv7**: GPL-3.0 License  
+
 - **Vosk API**: Apache 2.0 License
+
 - **FFmpeg**: LGPL/GPL License
+
 - **TensorFlow Lite**: Apache 2.0 License
+
 - **ai-edge-torch**: Apache 2.0 License
+
 - **MobileNet v2**: Apache 2.0 License
 
 ---
 
 ## Dataset Licenses
 - **UCF101**: Creative Commons License
+
 - **Open Images**: Creative Commons BY 4.0
 
 ---
@@ -126,6 +136,7 @@ This project builds upon several **open-source projects** while contributing nov
 
 ### Industry Partners
 - **Samsung Research**: For organizing the EnnovateX 2025 AI Challenge and providing the vision for on-device personal AI assistants
+
 - **Google AI Edge**: For developing and open-sourcing ai-edge-torch conversion tools that enable mobile AI deployment
 - **Ultralytics**: For the YoloV8s-oiv7 framework, comprehensive documentation, and active community support
 
@@ -133,13 +144,16 @@ This project builds upon several **open-source projects** while contributing nov
 
 ### Academic Contributors  
 - **University of Central Florida**: For creating and maintaining the UCF101 action recognition dataset
+
 - **Google Research**: For the Open Images dataset that serves as foundation training data
 
 ---
 
 ### Open Source Communities
 - **Flutter Community**: For exceptional documentation, packages, and developer support ecosystem
+
 - **TensorFlow Community**: For mobile AI frameworks and optimization tools
+
 - **Vosk Community**: For offline speech recognition models and multi-language support
 
 ---
