@@ -13,7 +13,7 @@ The Speech Intelligence Module is the core component of ListenIQ that captures, 
 ## 🏗️ Architecture
 
 ```
-Audio Input → Speech Recognition → Text Processing → Tokenization → 
+Audio Input → Vosk Recognition → Text Processing → Tokenization → 
 Chunking → Encryption → File Storage → Embedding Generation → Vector DB Storage
 ```
 
@@ -25,8 +25,8 @@ Chunking → Encryption → File Storage → Embedding Generation → Vector DB 
    - Background operation with minimal battery impact
 
 2. **Speech Recognition Engine**
-   - Flutter [speech_to_text](https://pub.dev/packages/speech_to_text) package
-   - Currently supports english
+   - Vosk offline speech recognition
+   - Multi-language support (20+ languages)
    - Zero-latency processing
 
 3. **Text Processing Pipeline**
