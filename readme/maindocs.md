@@ -1,6 +1,5 @@
 # **Technical documentation for ListenIQ**
 
----
 
 ## Key Features
 
