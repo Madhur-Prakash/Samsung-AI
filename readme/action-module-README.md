@@ -8,6 +8,16 @@ The model is designed for efficiency, running on standard hardware with real-tim
 
 ---
 
+## Architecture
+
+```
+Video/Camera Input → YoloV8s-oiv7 Detection → MobileNet v2 Processing →
+Action/Object Classification → Context Generation → Text File Creation →
+Embedding Storage → Vector Database
+```
+
+---
+
 # Components
 
 ## Object Detection
