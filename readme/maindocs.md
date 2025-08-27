@@ -257,6 +257,19 @@ Prompt Structuring → LLM Processing → Contextual Response
 
 ---
 
+## Large Language Model (LLM) 
+
+> Note: For optimized version of distilgpt2, consider using the TensorFlow Lite (.tflite) model provided by us on [Hugging Face](https://huggingface.co/Madhur-Prakash-Mangal/distilgpt2-TFLITE).
+
+### DistilGPT-2 Specifications
+| Attribute | Value |
+|-----------|-------|
+| **Base Model** | distilgpt2 |
+| **Official Repository** | [Hugging Face](https://huggingface.co/distilgpt2) |
+| **Architecture** | Transformer-based language model |
+| **Parameters** | ~82M parameters |
+| **License** | Apache 2.0 License |
+
 ## Installation & Setup
 
 ### Prerequisites

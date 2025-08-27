@@ -35,11 +35,9 @@ The foundation of contextual retrieval lies in efficient semantic search capabil
 
 This component intelligently identifies and assembles relevant contextual information to inform response generation.
 
-- **Multi-Modal Retrieval**: Fetches semantically related chunks from diverse data sources including speech transcriptions, system event logs, user behavioral patterns, and historical interaction data. Implements temporal weighting to prioritize recent interactions while maintaining access to relevant historical context.
+- **Multi-Modal Retrieval**: Fetches semantically related chunks from diverse data sources including speech transcriptions and system event logs.
 
-- **Ranking and Scoring**: Employs a sophisticated scoring algorithm combining semantic similarity (60%), temporal relevance (25%), and user preference patterns (15%). Uses learned user embeddings to personalize relevance scoring, adapting to individual communication styles and topic preferences over time.
-
-- **Context Filtering**: Implements multi-layered filtering to ensure response quality: removes duplicate or near-duplicate content using fuzzy matching, filters out low-confidence matches below configurable thresholds, and applies content-type specific filters to maintain contextual coherence.
+- **Context Filtering**: Implements multi-layered filtering to ensure response quality: removes duplicate or near-duplicate content using tokenization, filters out low-confidence matches below configurable thresholds, and applies content-type specific filters to maintain contextual coherence.
 
 - **Chunk Assembly**: Optimizes context window usage by intelligently truncating and combining retrieved chunks. Preserves essential context markers (timestamps, speaker identification, emotional indicators) while maximizing information density within token limits.
 
@@ -47,9 +45,7 @@ This component intelligently identifies and assembles relevant contextual inform
 
 Transforms raw retrieved context into structured, optimized prompts that maximize LLM performance while maintaining privacy boundaries.
 
-- **Template System**: Utilizes dynamic prompt templates that adapt based on query type (informational, conversational, task-oriented), user context depth, and available information sources. Templates include structured sections for context, user intent, constraints, and expected output format.
-
-- **Context Integration**: Seamlessly weaves retrieved information into coherent narrative structure, maintaining chronological order when relevant, clearly delineating between different information sources, and providing confidence indicators for uncertain information.
+- **Template System**: Utilizes a prompt templates that helps to structure user queries into a coherent format, ensuring all relevant context is included.
 
 - **Privacy Protection**: Implements comprehensive data sanitization removing personally identifiable information (PII) using named entity recognition, replacing sensitive data with anonymized placeholders, and applying configurable privacy levels based on user preferences. Maintains detailed audit logs of privacy operations for transparency.
 
@@ -59,15 +55,11 @@ Transforms raw retrieved context into structured, optimized prompts that maximiz
 
 The inference engine handles on-device language model execution with optimizations for mobile deployment.
 
-- **Model Architecture**: Deploys quantized transformer models converted to TensorFlow Lite, typically ranging from 1B to 7B parameters depending on device capabilities. Implements dynamic batching and memory-mapped model loading to minimize RAM usage while maintaining inference speed.
+- **Model Architecture**: Uses quantized transformer models converted to TensorFlow Lite.
 
-- **Inference Optimization**: Features GPU acceleration via delegate APIs when available, CPU optimization using ARM NEON instructions, and dynamic precision adjustment (FP16/INT8) based on hardware capabilities. Implements model sharding for larger models that exceed device memory constraints.
-
-- **Context-Aware Generation**: Strictly constrains response generation to provided context using attention masking and logit biasing techniques. Implements fact-checking mechanisms that cross-reference generated content against retrieved context to prevent hallucinations and maintain factual accuracy.
+- **Context-Aware Generation**: Strictly constrains response generation to provided context using attention masking and logit biasing techniques.
 
 - **Response Quality Control**: Monitors output for coherence using perplexity scoring, implements safety filtering to prevent inappropriate content generation, and provides confidence scoring for generated responses. Features graceful degradation when context is insufficient, providing transparent uncertainty indicators to users.
-
-- **Performance Monitoring**: Tracks key metrics including inference latency, memory usage, battery impact, and response quality scores. Implements adaptive performance scaling based on device thermal state and battery level to maintain optimal user experience.
 
 ---
 
@@ -76,19 +68,46 @@ The inference engine handles on-device language model execution with optimizatio
 ### Semantic Search & Embedding Retrieval
 ```dart
 // Vector search logic
-class RagVectorSearch {
-  final Database db;
-  final Interpreter embeddingModel;
+Future<List<VectorSearchResult>> search(List<double> queryEmbedding, {int topK = 5}) async {
+    // Calculate cosine similarities
+    final results = <VectorSearchResult>[];
+    
+    for (final entry in _entries) {
+      final similarity = _cosineSimilarity(queryEmbedding, entry.embedding);
+      results.add(VectorSearchResult(
+        id: entry.id,
+        text: entry.text,
+        metadata: entry.metadata,
+        similarity: similarity,
+      ));
+    }
 
-  Future<List<ResultChunk>> semanticSearch(String query, {int topK = 5}) async {
-    final queryEmbedding = await embeddingModel.run(convertQueryToInput(query));
-    final results = await db.rawQuery(
-      'SELECT *, cosine_similarity(embedding, ?) as score FROM chunks ORDER BY score DESC LIMIT ?',
-      [queryEmbedding, topK],
-    );
-    return results.map((r) => ResultChunk.fromMap(r)).toList();
+    // Sort by similarity (descending) and take top K
+    results.sort((a, b) => b.similarity.compareTo(a.similarity));
+    
+    return results.take(topK).toList();
   }
-}
+
+  double _cosineSimilarity(List<double> a, List<double> b) {
+    if (a.length != b.length) {
+      throw ArgumentError('Vector dimensions must match');
+    }
+
+    double dotProduct = 0.0;
+    double normA = 0.0;
+    double normB = 0.0;
+
+    for (int i = 0; i < a.length; i++) {
+      dotProduct += a[i] * b[i];
+      normA += a[i] * a[i];
+      normB += b[i] * b[i];
+    }
+
+    if (normA == 0.0 || normB == 0.0) {
+      return 0.0;
+    }
+    return dotProduct / (sqrt(normA) * sqrt(normB));
+  }
 ```
 
 ### Prompt Structuring & LLM Integration
@@ -96,57 +115,39 @@ class RagVectorSearch {
 class PromptBuilder {
   static String buildPrompt(List<ResultChunk> chunks, String userQuery) {
     final context = chunks.map((c) => c.text).join("\n");
-    return "User asked: '$userQuery'. Context: $context";
+    final ragPrompt = """
+      Please answer only using the context if missing say "The context doesn't contain the answer to your question."
+      Context: $cleanedContext
+      Question: $userQuery
+      Answer:
+    """;
+    return ragPrompt;
   }
 }
 
 class LLMEngine {
   final Interpreter llmModel;
 
-  Future<String> generateResponse(String prompt) async {
-    final output = llmModel.run([prompt]);
-    return output;
+  Future<String> generateAnswer(String prompt, {int maxGenLen = 32}) async {
+    // Tokenization and input preparation logic here
+    // ...
+
+    // Run inference
   }
 }
 ```
-
-### TTS Output
-```dart
-class TTSService {
-  final FlutterTts tts;
-
-  Future<void> speakResponse(String response) async {
-    await tts.speak(response);
-  }
-}
-```
-
----
-
-## Configuration Options
-
-### RAG & Database Settings
-```yaml
-vector_db:
-  type: "sqlite"
-  embedding_dim: 384
-  search_method: "cosine"
-  encryption_enabled: true
-
-llm_model:
-  path: "assets/models/llm.tflite"
-  max_tokens: 512
-  context_window: 1024
-```
-
 ---
 
 ## Performance Metrics
 
 - **Semantic Search Latency**: <50ms for top-5 queries
+
 - **LLM Response Time**: <200ms end-to-end
+
 - **TTS Latency**: <100ms per response
+
 - **Database Query Speed**: <10ms per context chunk
+
 - **Accuracy**: 90%+ relevant matches on internal data
 
 ---
@@ -154,28 +155,19 @@ llm_model:
 ## Security Features
 
 - **Query Scope Restriction**: Only on-device stored/contextual data used
+
 - **Encrypted Embeddings/Chunks**: All context data encrypted at rest
+
 - **Zero External Dependency**: Fully offline RAG and LLM pipeline
-
----
-
-## Usage Examples
-
-### Semantic Question
-```dart
-final ragSearch = RagVectorSearch(db, embeddingModel);
-final chunks = await ragSearch.semanticSearch('What did I do last Friday?', topK:5);
-final prompt = PromptBuilder.buildPrompt(chunks, 'What did I do last Friday?');
-final answer = await llmEngine.generateResponse(prompt);
-await TTSService().speakResponse(answer);
-```
 
 ---
 
 ## Testing & Validation
 
 - **Semantic Retrieval Accuracy**: >90%
+
 - **Latency Benchmarks**: sub-200ms query/response time
+
 - **TTS Plays All LLM Outputs**: Validated with integration tests
 
 ---
@@ -188,27 +180,12 @@ await TTSService().speakResponse(answer);
 
 ---
 
-## Configuration Files
-
-### RAG Config (`rag_config.yaml`)
-```yaml
-vector_db:
-  type: sqlite
-  embedding_dim: 384
-  search_method: cosine
-llm_model:
-  path: assets/models/llm.tflite
-  max_tokens: 512
-```
-
 ### Database Schema
 ```sql
 CREATE TABLE chunks (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    encrypted_text BLOB,
-    embedding BLOB,
-    timestamp INTEGER,
-    source_type TEXT,
+    text TEXT,
+    similarity REAL,
     metadata TEXT
 );
 CREATE INDEX idx_embedding ON chunks(embedding);
@@ -219,9 +196,13 @@ CREATE INDEX idx_embedding ON chunks(embedding);
 ## Future Enhancements
 
 - **Multi-hop Reasoning**: Support for more advanced RAG pipelines
+
 - **LLM Expansion**: More powerful locally-quantized LLMs
+
 - **Voice-Only Interaction**: End-to-end RAG with STT and TTS
+
 - **Contextual Summarization**: Automated summaries of user logs
+
 - **Integrated Activity Timeline**: Visual summary of recalled actions
 
 ---

@@ -39,6 +39,14 @@ All models utilized are **open-source** and publicly available:
 
 > *Note: YoloV8s-oiv7 offers dual licensing—AGPL-3.0 for open-source use and an Enterprise License for commercial applications.*
 
+## Models Published 
+
+| Model | Category | License | Purpose | Key Features | Performance | Parent Model |
+|-------|----------|---------|---------|--------------|-------------|---------------------|
+| **[distilgpt2](https://huggingface.co/Madhur-Prakash-Mangal/distilgpt2-TFLITE)** | Core AI Models | Apache 2.0 | Text generation and completion | Smaller, faster version of DistilGPT-2 | <50ms inference time on mobile devices | [Hugging Face](https://huggingface.co/distilgpt2) |
+| **[Embedding Model](https://huggingface.co/Madhur-Prakash-Mangal/all-MiniLM-L6-v2-tflite)** | Core AI Models | Apache 2.0 | Text embedding generation | Trained on diverse text corpora | <50ms inference time on mobile devices | [Hugging Face](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2) |
+| **[Action Detection Model](https://huggingface.co/NanG01/Action_detection)** | Core AI Models | Apache 2.0 | Customized action detection | Trained on UCF101 for 5 action categories | <100ms inference time on mobile devices | [Hugging Face](https://huggingface.co/docs/transformers/en/model_doc/mobilenet_v2) |
+
 ## Datasets Used
 *All datasets are publicly available under open licenses:*
 
