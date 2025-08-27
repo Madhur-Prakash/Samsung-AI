@@ -33,9 +33,10 @@ To capture temporal dynamics, the action recognition component analyzes sequence
 
 ### Demo Videos
 
-![Preview](https://github.com/user-attachments/assets/5ac8feee-d1c6-4442-b714-6d1d9d2c2d2d)
+[Action Detection](/readme/readme_assets/Action%20Detection.mp4)
 
-![Preview](https://github.com/user-attachments/assets/ac84f1f2-75ca-4ef2-bea9-40c64cc5a840)
+[Object Detection](/readme/readme_assets/Object%20Detection.mp4)
+
 
 - **Performance and Training**: Trained on subsets of UCF101, which contains over 13,000 clips, the model achieves accuracies around 70–90% on similar tasks. The MobileNetV2 backbone ensures mobile-friendly inference, with GRU adding temporal robustness for activities spanning multiple frames.
 
