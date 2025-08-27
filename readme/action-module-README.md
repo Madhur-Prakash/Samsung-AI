@@ -25,10 +25,17 @@ To capture temporal dynamics, the action recognition component analyzes sequence
 
 - **Model Architecture**: This uses a hybrid CNN-GRU network, where MobileNetV2 serves as the convolutional neural network (CNN) backbone for feature extraction, followed by gated recurrent unit (GRU) layers for temporal modeling. MobileNetV2 is lightweight and efficient, employing depthwise separable convolutions to reduce parameters while maintaining accuracy. The GRU layers process sequential data, capturing dependencies across frames with fewer parameters than LSTMs.
 
+![WhatsApp Image 2025-08-27 at 21 41 47_a94dbeda](https://github.com/user-attachments/assets/a982bcd9-ba05-4dd0-b8a4-edebdbad30af)
 
 
 - **Input and Processing**: The system buffers video into clips of 16 consecutive frames, each resized to 112×112 pixels for computational efficiency. This clip length balances temporal context with real-time constraints, allowing the model to detect short-duration actions. The CNN extracts spatial features from each frame, while GRUs aggregate them into temporal representations.
 - **Output and Classes**: The model predicts from five predefined action classes, adapted from the UCF101 dataset (a benchmark with 101 action categories, including sports, daily activities, and interactions). Examples might include "walking", "eating", "typing", "exercising", or "talking". Outputs include the top action label, confidence scores (softmax probabilities), and ranked predictions for uncertainty handling.
+
+### Demo Videos
+
+https://github.com/user-attachments/assets/5ac8feee-d1c6-4442-b714-6d1d9d2c2d2d
+
+https://github.com/user-attachments/assets/ac84f1f2-75ca-4ef2-bea9-40c64cc5a840
 
 
 
