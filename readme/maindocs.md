@@ -83,6 +83,7 @@ Prompt Structuring → LLM Processing → Contextual Response
 # Model Details & Performance
 
 ## YoloV8s-oiv7 Small Configuration
+> Note: For customized action detection model, consider using the TensorFlow Lite (.tflite) model provided by us on [Hugging Face](https://huggingface.co/NanG01/Action_detection ).
 
 ### Dataset Information
 | Attribute | Details |
