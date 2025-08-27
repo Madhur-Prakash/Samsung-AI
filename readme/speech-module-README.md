@@ -11,7 +11,8 @@ The Speech Intelligence Module is a Flutter-based component designed for real-ti
 ## Architecture
 
 ```
-Audio Input → Flutter STT Recognition → Text Processing → Tokenization → Chunking → Encryption → File Storage →  Embedding Generation → Vector DB Storage
+Audio Input → Flutter STT Recognition → Text Processing → Tokenization → Chunking → Encryption → File Storage → 
+Embedding Generation → Vector DB Storage
 ```
 
 ---
