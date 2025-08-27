@@ -18,6 +18,8 @@ Prompt Structuring → LLM Processing → Contextual Response
 
 The system is architected around four primary components that work in tandem to deliver intelligent, context-aware responses while maintaining strict privacy and efficiency standards. Each component is optimized for edge deployment, ensuring low-latency processing without cloud dependencies.
 
+---
+
 ## 1. Vector Database Search
 
 The foundation of contextual retrieval lies in efficient semantic search capabilities implemented through a hybrid local database architecture.
@@ -30,6 +32,8 @@ The foundation of contextual retrieval lies in efficient semantic search capabil
 
 - **Storage Optimization**: Features automatic embedding deletion after a **30 days** to avoid stale data and dynamic index rebuilding to maintain search performance as data grows.
 
+---
+
 ## 2. Context Retrieval Engine
 
 This component intelligently identifies and assembles relevant contextual information to inform response generation.
@@ -40,6 +44,8 @@ This component intelligently identifies and assembles relevant contextual inform
 
 - **Chunk Assembly**: Optimizes context window usage by intelligently truncating and combining retrieved chunks. Preserves essential context markers (timestamps, speaker identification, emotional indicators) while maximizing information density within token limits.
 
+---
+
 ## 3. Prompt Construction Module
 
 Transforms raw retrieved context into structured, optimized prompts that maximize LLM performance while maintaining privacy boundaries.
@@ -49,6 +55,8 @@ Transforms raw retrieved context into structured, optimized prompts that maximiz
 - **Privacy Protection**: Implements comprehensive data sanitization removing personally identifiable information (PII) using named entity recognition, replacing sensitive data with anonymized placeholders, and applying configurable privacy levels based on user preferences. Maintains detailed audit logs of privacy operations for transparency.
 
 - **Prompt Optimization**: Employs token-efficient encoding strategies to maximize context utilization, implements dynamic compression for lengthy contexts, and uses prompt engineering techniques like few-shot learning and chain-of-thought prompting to improve response quality.
+
+---
 
 ## 4. LLM Processing
 
@@ -109,6 +117,8 @@ Future<List<VectorSearchResult>> search(List<double> queryEmbedding, {int topK =
   }
 ```
 
+---
+
 ### Prompt Structuring & LLM Integration
 ```dart
 class PromptBuilder {
@@ -123,6 +133,8 @@ class PromptBuilder {
     return ragPrompt;
   }
 }
+
+---
 
 class LLMEngine {
   final Interpreter llmModel;
@@ -207,3 +219,4 @@ CREATE INDEX idx_embedding ON chunks(embedding);
 ---
 
 *Part of ListenIQ - Built with ❤️ for Samsung EnnovateX 2025*
+---

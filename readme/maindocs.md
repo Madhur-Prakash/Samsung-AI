@@ -361,6 +361,8 @@ Follow the steps below to set up the required models:
 
 4. **Place all downloaded models** in `assets/models/` directory
 
+---
+
 ### Asset Configuration
 
 Ensure that the asset files are correctly referenced in your `pubspec.yaml`:
@@ -370,6 +372,7 @@ flutter:
   assets:
     - assets/models/
 ```
+---
 
 ### Permissions Configuration
 
@@ -379,6 +382,8 @@ flutter:
 <uses-permission android:name="android.permission.CAMERA" />
 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 ```
+
+---
 
 ### Run the Application
 
@@ -394,6 +399,8 @@ flutter run
 - [RAG Module](rag-module-README.md)
 - [Speech To Text Module](speech-module-README.md)
 
+---
+
 ## Samsung EnnovateX 2025 Alignment
 
 ### Challenge Requirements
@@ -403,6 +410,8 @@ flutter run
 - **Real-Time Processing**: Immediate response without latency
 - **Multi-Modal Intelligence**: Speech, vision, and text processing integration
 - **Samsung Ecosystem**: Optimized for Samsung devices and Knox security
+
+---
 
 ### Innovation Highlights
 
@@ -422,6 +431,8 @@ flutter run
 - **Pixel Change Detection**: Intelligent monitoring with configurable sensitivity
 - **Context-Aware Capture**: Activity-based screenshot frequency adjustment
 
+---
+
 ### Phase 2: Enhanced AI Models
 
 - **Expanded Action Recognition**: Support for 50+ action categories
@@ -429,12 +440,16 @@ flutter run
 - **Advanced NLP**: Local language model for complex query understanding
 - **Multi-Language Support**: Comprehensive international language coverage
 
+---
+
 ### Phase 3: Samsung Integration
 
 - **Galaxy AI Integration**: Seamless Samsung ecosystem connectivity
 - **S Pen Intelligence**: Handwriting and drawing recognition
 - **Bixby Collaboration**: Enhanced voice assistant capabilities
 - **Knox Security**: Enterprise-grade security implementation
+
+---
 
 ### Phase 4: Community & Scaling
 
@@ -446,3 +461,4 @@ flutter run
 ---
 
 *Part of ListenIQ - Built with ❤️ for Samsung EnnovateX 2025*
+---
