@@ -24,8 +24,14 @@ The object detection module forms the visual foundation of the model, focusing o
 To capture temporal dynamics, the action recognition component analyzes sequences of frames to identify ongoing activities, complementing the static object detection with motion-based insights.
 
 - **Model Architecture**: This uses a hybrid CNN-GRU network, where MobileNetV2 serves as the convolutional neural network (CNN) backbone for feature extraction, followed by gated recurrent unit (GRU) layers for temporal modeling. MobileNetV2 is lightweight and efficient, employing depthwise separable convolutions to reduce parameters while maintaining accuracy. The GRU layers process sequential data, capturing dependencies across frames with fewer parameters than LSTMs.
+
+
+
 - **Input and Processing**: The system buffers video into clips of 16 consecutive frames, each resized to 112×112 pixels for computational efficiency. This clip length balances temporal context with real-time constraints, allowing the model to detect short-duration actions. The CNN extracts spatial features from each frame, while GRUs aggregate them into temporal representations.
 - **Output and Classes**: The model predicts from five predefined action classes, adapted from the UCF101 dataset (a benchmark with 101 action categories, including sports, daily activities, and interactions). Examples might include "walking", "eating", "typing", "exercising", or "talking". Outputs include the top action label, confidence scores (softmax probabilities), and ranked predictions for uncertainty handling.
+
+
+
 - **Performance and Training**: Trained on subsets of UCF101, which contains over 13,000 clips, the model achieves accuracies around 70–90% on similar tasks. The MobileNetV2 backbone ensures mobile-friendly inference, with GRU adding temporal robustness for activities spanning multiple frames.
 
 ## Speech Processing
