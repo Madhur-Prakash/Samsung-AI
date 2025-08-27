@@ -7,10 +7,10 @@
 **Manusmriti**
 
 ## Team Members
-- **Member 1**: Pranav Sharma
-- **Member 2**: Nidhi Singh  
-- **Member 3**: Madhur Prakash Mangal
-- **Member 4**: Nandika Gupta
+- **Member 1**: Nandika Gupta
+- **Member 2**: Madhur Prakash Mangal
+- **Member 3**: Nidhi Singh
+- **Member 4**: Pranav Sharma
 
 ## Demo Video Link
 [YouTube Demo](https://youtube.com/watch?v=demo-link)

@@ -9,6 +9,8 @@
 - **Encrypted Storage**: All speech data tokenized, chunked, and stored in encrypted text files using [Flutter Encrypt](https://pub.dev/packages/encrypt) package
 - **Privacy-First**: No cloud dependencies, all processing happens on-device
 
+---
+
 ## Advanced Object/Action Detection
 
 - **YoloV8s-oiv7 Small Model**: Trained on UCF101 dataset for real-time action recognition
@@ -176,7 +178,6 @@ Prompt Structuring → LLM Processing → Contextual Response
 
 ### Flutter Integration
 
-
 **Key Integration Features**:
 - Native Android/iOS library binding
 - Asynchronous execution with progress callbacks  
@@ -269,6 +270,8 @@ Prompt Structuring → LLM Processing → Contextual Response
 | **Parameters** | ~82M parameters |
 | **License** | Apache 2.0 License |
 
+---
+
 ## Installation & Setup
 
 ### Prerequisites
@@ -340,6 +343,7 @@ dependencies:
   ffmpeg_kit_flutter_new: ^3.2.0
 
 ```
+---
 
 ### Model Setup
 
