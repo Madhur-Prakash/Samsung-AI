@@ -1,16 +1,16 @@
-# Speech Intelligence Module 🎙️
+# Speech Intelligence Module
 
 **Real-time Speech Recognition & Contextual Storage System**
 
 ---
 
-## 📋 Overview
+## Overview
 
 The Speech Intelligence Module is the core component of ListenIQ that captures, processes, and stores user speech data entirely on-device. This module ensures continuous speech monitoring while maintaining complete privacy through local processing and encrypted storage.
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 Audio Input → Vosk Recognition → Text Processing → Tokenization → 
@@ -114,7 +114,7 @@ class EmbeddingService {
 
 ---
 
-## 🔧 Configuration Options
+## Configuration Options
 
 ### Model Settings
 ```yaml
@@ -159,7 +159,7 @@ class SensitiveDataFilter {
 
 ---
 
-## 📊 Performance Metrics
+## Performance Metrics
 
 ### Real-time Processing
 - **Recognition Latency**: <100ms
@@ -181,7 +181,7 @@ class SensitiveDataFilter {
 
 ---
 
-## 🔐 Security Features
+## Security Features
 
 ### Data Protection
 - **End-to-end Encryption**: AES-256-GCM encryption
@@ -217,7 +217,7 @@ class PrivacyManager {
 
 ---
 
-## 🚀 Usage Examples
+## Usage Examples
 
 ### Basic Speech Recognition
 ```dart
@@ -262,7 +262,7 @@ class SpeechStorage {
 
 ---
 
-## 🧪 Testing & Validation
+## Testing & Validation
 
 ### Unit Tests
 ```dart
@@ -293,7 +293,7 @@ void main() {
 
 ---
 
-## 📱 Flutter Integration
+## Flutter Integration
 
 ### State Management (Riverpod)
 ```dart
@@ -333,7 +333,7 @@ class PermissionService {
 
 ---
 
-## 🔧 Configuration Files
+## Configuration Files
 
 ### Model Configuration (`speech_config.yaml`)
 ```yaml
@@ -371,7 +371,7 @@ CREATE INDEX idx_embedding ON speech_chunks(embedding);
 
 ---
 
-## 🚨 Error Handling
+## Error Handling
 
 ### Common Issues & Solutions
 
@@ -399,7 +399,7 @@ class MemoryManager {
 
 ---
 
-## 📈 Future Enhancements
+## Future Enhancements
 
 ### Planned Features
 - **Multi-speaker Recognition**: Speaker diarization capabilities  
@@ -413,29 +413,6 @@ class MemoryManager {
 - **Streaming Processing**: Continuous processing with minimal latency
 - **Background Processing**: Efficient background task management
 - **Hardware Acceleration**: GPU/NPU utilization where available
-
----
-
-## 🤝 Contributing
-
-### Development Setup
-```bash
-# Install dependencies
-flutter pub get
-
-# Download Vosk models
-./scripts/download_models.sh
-
-# Run tests
-flutter test test/speech_module_test.dart
-```
-
-### Code Style Guidelines
-- Use meaningful variable names
-- Add comprehensive documentation
-- Follow Flutter/Dart best practices
-- Implement proper error handling
-- Write unit tests for new features
 
 ---
 

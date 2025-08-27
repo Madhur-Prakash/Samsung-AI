@@ -11,9 +11,7 @@ The model is designed for efficiency, running on standard hardware with real-tim
 ## Architecture
 
 ```
-Video/Camera Input → YoloV8s-oiv7 Detection → MobileNet v2 Processing →
-Action/Object Classification → Context Generation → Text File Creation →
-Embedding Storage → Vector Database
+Video/Camera Input → YoloV8s-oiv7 Detection → MobileNet v2 Processing → Action/Object Classification → Context Generation → Text File Creation → Embedding Storage → Vector Database
 ```
 
 ---
@@ -62,6 +60,40 @@ The auditory modality handles real-time speech capture and interpretation, addin
 - **Features and Logging**: Timestamps are attached to transcriptions for synchronization with video. The model handles noise robustness through beam search decoding, achieving word error rates (WER) below 10% in quiet environments.
 
 - **Contextual Analysis**: Beyond transcription, rule-based or simple ML classifiers map keywords to intents, enhancing fusion by linking speech to actions (e.g., "I'm hungry" with eating detection).
+
+---
+
+## Modes of Operation
+
+### Real-time Audio Processing
+
+  - Uses sounddevice.RawInputStream to continuously capture microphone audio.
+
+  - Streams audio chunks to Vosk’s KaldiRecognizer.
+
+  - Produces partial and final speech transcriptions live.
+
+  - SpeechProcessor class logs transcriptions and categorizes speech intent.
+
+---
+
+### Recorded Audio Processing
+
+  - Extracts audio from uploaded video files using ffmpeg.
+
+  - Processes WAV audio offline with Vosk’s KaldiRecognizer.
+
+  - Generates full speech transcription from recorded audio.
+
+  - Transcriptions are combined with video frame analysis in the fusion stage.
+
+## Fusion Integration
+
+- Both live and recorded speech transcriptions are fed into the fusion pipeline.
+
+- Fusion combines audio cues with object detection and action recognition for scene understanding.
+
+---
 
 # Fusion Strategy
 Fusion is the core innovation, combining multimodal outputs into a unified scene interpretation without requiring complex end-to-end training.
