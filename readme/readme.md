@@ -1,6 +1,6 @@
 # Samsung EnnovateX 2025 AI Challenge Submission
 
-## Problem Statement
+## Problem Statement - Building the Untethered, Always-On AI Companion
 > Reimagine a smartphone that doesn't just run apps, but truly understands and assists users. An agent that sees what you see, hears what you hear, and remembers your experiences to provide contextual, real-time help, all without a constant connection to the cloud.
 
 ## Team Name
