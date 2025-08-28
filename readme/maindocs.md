@@ -272,6 +272,16 @@ Prompt Structuring → LLM Processing → Contextual Response
 
 ---
 
+### For more detailed documentation on specific modules, please refer to the following resources:
+
+- [Object/Action Detection Module](action-module-README.md)
+
+- [RAG Module](rag-module-README.md)
+
+- [Speech To Text Module](speech-module-README.md)
+
+---
+
 ## App UI
 
 | Home Screen | STT Screen | Video Processing Screen | Options Menu |
@@ -402,16 +412,6 @@ flutter:
 ```bash
 flutter run
 ```
-
----
-
-### For more detailed documentation on specific modules, please refer to the following resources:
-
-- [Object/Action Detection Module](action-module-README.md)
-
-- [RAG Module](rag-module-README.md)
-
-- [Speech To Text Module](speech-module-README.md)
 
 ---
 
