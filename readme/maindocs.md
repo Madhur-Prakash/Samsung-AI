@@ -274,30 +274,15 @@ Prompt Structuring → LLM Processing → Contextual Response
 
 ## App UI
 
-### Home Screen
-
-![WhatsApp Image 2025-08-28 at 12 32 57_a2afbc0b](https://github.com/user-attachments/assets/d7267f1d-0772-482b-b164-3072d106ee61)
-
----
-
-### STT Screen 
-![WhatsApp Image 2025-08-28 at 12 33 10_a189ecdb](https://github.com/user-attachments/assets/a12bc170-5486-461f-8893-c2701808aaf7)
+| Home Screen | STT Screen |
+|-------------|------------|
+| <img src="https://github.com/user-attachments/assets/d7267f1d-0772-482b-b164-3072d106ee61" width="250" style="margin-right:120px;"/> | <img src="https://github.com/user-attachments/assets/a12bc170-5486-461f-8893-c2701808aaf7" width="250"/> |
 
 ---
 
-### Video Processing Screen
-![WhatsApp Image 2025-08-28 at 12 33 11_c8398c2d](https://github.com/user-attachments/assets/bb51da72-49f0-489b-9042-8ee1023550cc)
-
----
-
-### User Chat Screen
-![WhatsApp Image 2025-08-28 at 12 33 03_250280a1](https://github.com/user-attachments/assets/d56ad00b-6cbd-40a5-a4ea-e8663dae77c7)
-
----
-
-### Options Menu
-![WhatsApp Image 2025-08-28 at 12 31 18_583b5f6d](https://github.com/user-attachments/assets/0e83e961-9e58-4aee-9308-8ed2ca50403b)
-
+| Video Processing Screen | Options Menu |
+|-------------|------------|
+| <img src="https://github.com/user-attachments/assets/bb51da72-49f0-489b-9042-8ee1023550cc" width="250" style="margin-right:120px;"/> | <img src="https://github.com/user-attachments/assets/0e83e961-9e58-4aee-9308-8ed2ca50403b" width="250"/> |
 
 ---
 
