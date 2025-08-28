@@ -42,8 +42,6 @@ All models utilized are **open-source** and publicly available:
 | **[YoloV8s-oiv7 Small](https://huggingface.co/Ultralytics/YOLOv8)** | Core AI Models | GPL-3.0 | Real-time object and action detection | Fine-tuned on UCF101 dataset for 5 action categories | <100ms inference time on mobile devices | [Ultralytics YOLO](https://github.com/ultralytics/ultralytics) |
 | **[MobileNet v2](https://huggingface.co/docs/transformers/en/model_doc/mobilenet_v2)** | Core AI Models | Apache 2.0 | Efficient video processing backbone | TensorFlow Lite quantized for mobile deployment | <50MB model size | [TensorFlow Models](https://github.com/tensorflow/models) |
 | **[Vosk API](https://github.com/alphacep/vosk-api)** | Speech Processing | Apache 2.0 | Offline speech-to-text recognition | 20+ language models supported, complete offline operation | Real-time streaming recognition with zero latency, 50MB model size | [Vosk API](https://github.com/alphacep/vosk-api) |
-| **[OLLAMA all-MiniLM-L6-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2)** | Natural Language Processing | Apache 2.0 | Sentence embeddings for RAG implementation | PyTorch → TensorFlow Lite conversion, 384-dimensional embeddings | <50ms inference per sentence on mobile CPU | [Sentence Transformers](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2) |
-
 > *Note: YoloV8s-oiv7 offers dual licensing—AGPL-3.0 for open-source use and an Enterprise License for commercial applications.*
 
 ---
