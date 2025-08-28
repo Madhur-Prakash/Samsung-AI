@@ -156,7 +156,5 @@ This project builds upon several **open-source projects** while contributing nov
 
 ---
 
-*Advancing Privacy-First On-Device AI for the Next Generation of Mobile Intelligence*
-
 *Built with ❤️ for Samsung EnnovateX 2025 AI Challenge*  
 ---
