@@ -276,7 +276,7 @@ Prompt Structuring → LLM Processing → Contextual Response
 
 | Home Screen | STT Screen |
 |-------------|------------|
-| <img src="https://github.com/user-attachments/assets/d7267f1d-0772-482b-b164-3072d106ee61" width="250" style="margin-right:120px;"/> | <img src="https://github.com/user-attachments/assets/a12bc170-5486-461f-8893-c2701808aaf7" width="250"/> |
+| <img src="https://github.com/user-attachments/assets/d7267f1d-0772-482b-b164-3072d106ee61" width="250" style="margin-right:120px;"/> | <img src="https://github.com/user-attachments/assets/a12bc170-5486-461f-8893-c2701808aaf7" width="250"/> | | <img src="https://github.com/user-attachments/assets/bb51da72-49f0-489b-9042-8ee1023550cc" width="250" style="margin-right:120px;"/> | <img src="https://github.com/user-attachments/assets/0e83e961-9e58-4aee-9308-8ed2ca50403b" width="250"/> |
 
 ---
 
