@@ -155,5 +155,13 @@ Fusion-SceneInterpreter
 
 ---
 
+## For more details and related modules, Please refer:
+
+- [RAG Module](rag-module-README.md)
+
+- [Speech To Text Module](speech-module-README.md)
+
+---
+
 *Part of ListenIQ - Built with ❤️ for Samsung EnnovateX 2025*
 ---

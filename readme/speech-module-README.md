@@ -340,5 +340,13 @@ CREATE INDEX idx_embedding ON speech_chunks(embedding);
 
 ---
 
+## For more details and related modules, Please refer:
+
+- [Object/Action Detection Module](action-module-README.md)
+
+- [Speech To Text Module](speech-module-README.md)
+
+---
+
 *Part of ListenIQ - Built with ❤️ for Samsung EnnovateX 2025*
 ---
