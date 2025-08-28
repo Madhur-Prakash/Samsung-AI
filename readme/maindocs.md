@@ -84,7 +84,7 @@ Prompt Structuring → LLM Processing → Contextual Response
 # Model Details & Performance
 
 ## YoloV8s-oiv7 Small Configuration
-> Note: For customized action detection model, consider using the TensorFlow Lite (.tflite) model provided by us on [Hugging Face](https://huggingface.co/NanG01/Action_detection ).
+> Note: For customized action detection model, consider using the TensorFlow Lite **(.tflite)** model provided by us on [Hugging Face](https://huggingface.co/NanG01/Action_detection ).
 
 ### Dataset Information
 | Attribute | Details |
@@ -189,7 +189,7 @@ Prompt Structuring → LLM Processing → Contextual Response
 
 ## Embedding Model
 
-> Note: For optimized version of all-MiniLM-L6-v2, consider using the TensorFlow Lite (.tflite) model provided by us on [Hugging Face](https://huggingface.co/Madhur-Prakash-Mangal/all-MiniLM-L6-v2-tflite).
+> Note: For optimized version of all-MiniLM-L6-v2, consider using the TensorFlow Lite **(.tflite)** model provided by us on [Hugging Face](https://huggingface.co/Madhur-Prakash-Mangal/all-MiniLM-L6-v2-tflite).
 
 ### all-MiniLM-L6-v2 Specifications
 | Attribute | Value |
@@ -259,7 +259,7 @@ Prompt Structuring → LLM Processing → Contextual Response
 
 ## Large Language Model (LLM) 
 
-> Note: For optimized version of distilgpt2, consider using the TensorFlow Lite (.tflite) model provided by us on [Hugging Face](https://huggingface.co/Madhur-Prakash-Mangal/distilgpt2-TFLITE).
+> Note: For optimized version of distilgpt2, consider using the TensorFlow Lite **(.tflite)** model provided by us on [Hugging Face](https://huggingface.co/Madhur-Prakash-Mangal/distilgpt2-TFLITE).
 
 ### DistilGPT-2 Specifications
 | Attribute | Value |
@@ -352,12 +352,16 @@ Follow the steps below to set up the required models:
 
 1. **YoloV8s-oiv7 Small (Object/Action Recognition)**  
    [Download from Hugging Face](https://huggingface.co/Ultralytics/YOLOv8)  
+    - For **TFLite version**, use the model provided by us on [Hugging Face](https://huggingface.co/NanG01/Action_detection).
 
 2. **Vosk Speech Recognition Models**  
    [Install from GitHub](https://github.com/alphacep/vosk-api)  
 
 3. **all-MiniLM-L6-v2 (TFLite version)**  
    [Download from Hugging Face](https://huggingface.co/Madhur-Prakash-Mangal/all-MiniLM-L6-v2-tflite)  
+
+4. **distilgpt2 (TFLite version)**  
+   [Download from Hugging Face](https://huggingface.co/Madhur-Prakash-Mangal/distilgpt2-TFLITE)  
 
 4. **Place all downloaded models** in `assets/models/` directory
 
@@ -424,7 +428,7 @@ flutter run
 
 ## Future Roadmap
 
-### Phase 1: Screen Intelligence _(Current Development)_
+### Phase 1: Screen Intelligence _(Currently Under Development)_
 
 - **Adaptive Screenshot System**: Smart capture based on user activity patterns
 - **Advanced OCR Integration**: Multi-language text extraction capabilities

@@ -1,7 +1,5 @@
 # Speech Intelligence Module
 
----
-
 ## Overview
 
 The Speech Intelligence Module is a Flutter-based component designed for real-time speech-to-text (STT) conversion. It leverages the speech_to_text package to capture audio input from the device's microphone, process it in real-time, and output transcribed text. This module is ideal for integrating voice recognition into AI-powered mobile applications, such as virtual assistants, note-taking apps, or accessibility tools.
@@ -177,7 +175,7 @@ class PrivacyManager {
 
 ### Full Example
 
-``dart
+```dart
 class SpeechWidget extends StatefulWidget {
   @override
   _SpeechWidgetState createState() => _SpeechWidgetState();

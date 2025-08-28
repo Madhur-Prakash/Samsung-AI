@@ -25,7 +25,7 @@ The foundation of contextual retrieval lies in efficient semantic search capabil
 
 - **Database Architecture**: Utilizes SQLite as the primary storage layer with custom extensions for vector operations, providing ACID compliance and efficient indexing. The system implements FAISS-like functionality through optimized vector similarity algorithms, supporting cosine similarity, dot product, and Euclidean distance metrics for flexible matching strategies.
 
-- **Semantic Embedding Engine**: Employs the **all-MiniLM-L6-v2** model converted to TensorFlow Lite format (TFLite) for on-device semantic encoding. This 22MB model generates 384-dimensional embeddings with minimal computational overhead, achieving inference speeds of <50ms per query on mobile processors. The model excels at understanding semantic relationships between user queries and stored context.
+- **Semantic Embedding Engine**: Employs the **all-MiniLM-L6-v2** model converted to TensorFlow Lite format **(TFLite)** for on-device semantic encoding. This 22MB model generates 384-dimensional embeddings with minimal computational overhead, achieving inference speeds of <50ms per query on mobile processors. The model excels at understanding semantic relationships between user queries and stored context.
 
 - **Vector Operations**: Performs efficient vector similarity searches using cosine similarity and top-k retrieval techniques. This ensures responses are context-aware, accurate, and privacy-preserving, while supporting parallel queries for smooth, real-time interaction.
 
