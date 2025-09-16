@@ -92,7 +92,6 @@ This project builds upon several **open-source projects** while contributing nov
 | **Dependency** | **Usage / Integration** | **Provider** | **License** |
 |----------------|--------------------------|--------------|-------------|
 | [TensorFlow Lite](https://github.com/tensorflow/tensorflow) | On-device model inference & optimization (Custom TFLite interpreter) | Google | Apache 2.0 |
-| [ai-edge-torch](https://github.com/google-ai-edge/ai-edge-torch) | Converts PyTorch models to mobile-optimized TFLite | Google AI Edge Team | Apache 2.0 |
 
 ---
 
