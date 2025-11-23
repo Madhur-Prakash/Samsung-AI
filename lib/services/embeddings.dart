@@ -44,16 +44,32 @@ class Embeddings {
   }
 
   List<List<double>> embedTexts(List<String> texts) {
+    if (texts.isEmpty) {
+      print("No texts provided for embedding");
+      return [];
+    }
+    
     try {
-      // Process one text at a time for all-MiniLM-L6-v2 stability
       List<List<double>> allEmbeddings = [];
       
       for (int i = 0; i < texts.length; i++) {
-        print("Processing text ${i + 1}/${texts.length}");
-        final embedding = _embedSingle(texts[i]);
+        final text = texts[i].trim();
+        if (text.isEmpty) {
+          print("Skipping empty text at index $i");
+          allEmbeddings.add(List<double>.filled(embedSize, 0.0));
+          continue;
+        }
+        
+        final embedding = _embedSingle(text);
         allEmbeddings.add(embedding);
+        
+        // Add small delay to prevent overwhelming the model
+        if (i < texts.length - 1) {
+          Future.delayed(const Duration(milliseconds: 10));
+        }
       }
       
+      print("Successfully generated ${allEmbeddings.length} embeddings");
       return allEmbeddings;
     } catch (e, stackTrace) {
       print("Error in embedTexts: $e");
@@ -64,58 +80,62 @@ class Embeddings {
 
   List<double> _embedSingle(String text) {
     try {
-      print("Processing text: '${text.length > 50 ? text.substring(0, 50) + '...' : text}'");
+      if (text.trim().isEmpty) {
+        print("Empty text provided, returning zero embedding");
+        return List<double>.filled(embedSize, 0.0);
+      }
 
       // Tokenize the text
       final tokens = tokenizer.encode(text, maxLen: maxLen);
-      print("Raw tokens (first 10): ${tokens.take(10).toList()}...");
-
-      // Critical fix: Ensure all tokens are within valid range for all-MiniLM-L6-v2
+      
+      // Enhanced token validation for all-MiniLM-L6-v2
       final validTokens = tokens.map((token) {
-        if (token < 0 || token >= _modelVocabSize) {
-          // For all-MiniLM-L6-v2, use [UNK] token ID which is typically 100
-          return 100;
-        }
+        // Clamp tokens to valid range
+        if (token < 0) return 0; // PAD token
+        if (token >= _modelVocabSize) return 100; // UNK token
         return token;
       }).toList();
 
-      // Verify token validity
-      final minToken = validTokens.reduce((a, b) => a < b ? a : b);
-      final maxToken = validTokens.reduce((a, b) => a > b ? a : b);
-      print("Token range: min=$minToken, max=$maxToken (vocab size: $_modelVocabSize)");
-
-      if (maxToken >= _modelVocabSize || minToken < 0) {
-        throw Exception("Invalid tokens detected even after cleaning");
+      // Create attention mask (1 for real tokens, 0 for padding)
+      final attentionMask = validTokens.map((id) => id != 0 ? 1 : 0).toList();
+      
+      // Ensure we have at least some non-padding tokens
+      final nonPadTokens = attentionMask.where((mask) => mask == 1).length;
+      if (nonPadTokens == 0) {
+        print("No valid tokens found, returning zero embedding");
+        return List<double>.filled(embedSize, 0.0);
       }
 
-      // Create attention mask
-      final attentionMask = validTokens.map((id) => id != 0 ? 1 : 0).toList();
-
-      print("Final tokens (first 10): ${validTokens.take(10).toList()}...");
-
-      // Prepare inputs for all-MiniLM-L6-v2 (expects input_ids and attention_mask)
+      // Prepare inputs for all-MiniLM-L6-v2
       final inputIds = [validTokens];
       final attentionMasks = [attentionMask];
 
-      // Resize tensors for single input
-      interpreter.resizeInputTensor(0, [1, maxLen]); // input_ids
-      interpreter.resizeInputTensor(1, [1, maxLen]); // attention_mask
+      // Resize tensors dynamically
+      interpreter.resizeInputTensor(0, [1, maxLen]);
+      interpreter.resizeInputTensor(1, [1, maxLen]);
       interpreter.allocateTensors();
 
-      // Prepare output buffer for all-MiniLM-L6-v2 (384-dim embeddings)
+      // Prepare output buffer
       final output = [List<double>.filled(embedSize, 0.0)];
 
-      print("Running inference...");
+      // Run inference
       interpreter.runForMultipleInputs([inputIds, attentionMasks], {0: output});
-      print("Inference completed successfully");
-
-      return output[0];
+      
+      // Validate output embedding
+      final embedding = output[0];
+      final embeddingNorm = _calculateNorm(embedding);
+      
+      if (embeddingNorm < 1e-6) {
+        print("Warning: Generated embedding has very low norm ($embeddingNorm)");
+        // Still return it as it might be valid
+      }
+      
+      return embedding;
     } catch (e, stackTrace) {
       print("TensorFlow Lite inference failed: $e");
       print("Stack trace: $stackTrace");
       
       // Return zero embedding as fallback
-      print("Returning zero embedding as fallback");
       return List<double>.filled(embedSize, 0.0);
     }
   }

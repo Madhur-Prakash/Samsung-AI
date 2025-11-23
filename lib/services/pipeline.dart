@@ -85,31 +85,63 @@ class Pipeline {
 
       print("📂 Collected ${allChunks.length} text chunks from ${tempTxtFiles.length} files");
 
-      // Step 3: Generate embeddings
+      // Step 3: Generate embeddings with validation
       final embeddings = await Embeddings.load();
+      
+      // Validate model before processing
+      final isValid = await embeddings.validateModel();
+      if (!isValid) {
+        return PipelineResult(0, 0, false, "Embeddings model validation failed");
+      }
+      
+      print("📊 Generating embeddings for ${allChunks.length} chunks...");
       final vectors = embeddings.embedTexts(allChunks);
-      // Note: Embeddings class doesn't have a close() method
+      
+      // Validate generated embeddings
+      int validEmbeddings = 0;
+      for (final vector in vectors) {
+        final norm = vector.fold(0.0, (sum, val) => sum + val * val);
+        if (norm > 1e-6) validEmbeddings++;
+      }
+      
+      print("✅ Generated ${vectors.length} embeddings (${validEmbeddings} valid)");
+      
+      if (validEmbeddings == 0) {
+        return PipelineResult(allChunks.length, 0, false, "No valid embeddings generated");
+      }
 
-      print("✅ Generated ${vectors.length} embeddings");
-
-      // Step 4: Store in vector database
+      // Step 4: Store in vector database with validation
       final vectorStore = await VectorStore.open(embedSize: 384);
       
       // Clear existing data for refresh
       await vectorStore.clear();
       
-      // Add all chunks and their embeddings
+      // Add only valid embeddings to the store
+      int storedCount = 0;
       for (int i = 0; i < allChunks.length; i++) {
-        await vectorStore.add(
-          id: 'chunk_$i',
-          embedding: vectors[i],
-          text: allChunks[i],
-          metadata: {'source': chunkSources[i]},
-        );
+        final vector = vectors[i];
+        final norm = vector.fold(0.0, (sum, val) => sum + val * val);
+        
+        // Only store embeddings with meaningful values
+        if (norm > 1e-6) {
+          await vectorStore.add(
+            id: 'chunk_$i',
+            embedding: vector,
+            text: allChunks[i],
+            metadata: {
+              'source': chunkSources[i],
+              'norm': norm,
+              'chunk_index': i,
+            },
+          );
+          storedCount++;
+        } else {
+          print("Skipping chunk $i with zero embedding");
+        }
       }
 
       await vectorStore.close();
-      print("💾 Stored ${vectors.length} embeddings in vector store");
+      print("💾 Stored $storedCount/${vectors.length} valid embeddings in vector store");
 
       // Step 5: Re-encrypt the files
       await crypto.loadKeyEncrypt();
@@ -125,9 +157,9 @@ class Pipeline {
 
       return PipelineResult(
         allChunks.length, 
-        vectors.length, 
+        storedCount, 
         true, 
-        "Pipeline completed successfully"
+        "Pipeline completed: $storedCount valid embeddings stored"
       );
 
     } catch (e, stackTrace) {

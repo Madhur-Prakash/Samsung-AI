@@ -27,15 +27,36 @@ class BertTokenizer {
 
   /// Encodes text into token IDs, padded/truncated to [maxLen].
   List<int> encode(String text, {int maxLen = 128}) {
+    if (text.trim().isEmpty) {
+      // Return padded sequence for empty text
+      final padded = List<int>.filled(maxLen, vocab["[PAD]"] ?? 0);
+      padded[0] = vocab["[CLS]"] ?? 101;
+      padded[1] = vocab["[SEP]"] ?? 102;
+      return padded;
+    }
+    
     final tokens = _tokenize(text);
     final wp = ["[CLS]", ...tokens, "[SEP]"];
-    final ids = wp.map((t) => vocab[t] ?? vocab[unkToken]!).toList();
+    
+    // Ensure we have fallback values for special tokens
+    final clsId = vocab["[CLS]"] ?? 101;
+    final sepId = vocab["[SEP]"] ?? 102;
+    final unkId = vocab[unkToken] ?? 100;
+    final padId = vocab["[PAD]"] ?? 0;
+    
+    final ids = wp.map((t) {
+      if (t == "[CLS]") return clsId;
+      if (t == "[SEP]") return sepId;
+      return vocab[t] ?? unkId;
+    }).toList();
 
-    // Pad/truncate
-    final padded = List<int>.filled(maxLen, vocab["[PAD]"] ?? 0);
-    for (int i = 0; i < ids.length && i < maxLen; i++) {
+    // Pad/truncate with proper bounds checking
+    final padded = List<int>.filled(maxLen, padId);
+    final copyLength = ids.length < maxLen ? ids.length : maxLen;
+    for (int i = 0; i < copyLength; i++) {
       padded[i] = ids[i];
     }
+    
     return padded;
   }
 
@@ -52,37 +73,48 @@ class BertTokenizer {
   }
 
   List<String> _wordpiece(String token) {
-  if (vocab.containsKey(token)) return [token];
-  final List<String> subTokens = [];
-  int start = 0;
+    if (token.isEmpty) return [unkToken];
+    if (vocab.containsKey(token)) return [token];
+    
+    final List<String> subTokens = [];
+    int start = 0;
+    int maxIterations = token.length * 2; // Prevent infinite loops
+    int iterations = 0;
 
-  while (start < token.length) {
-    int end = token.length;
-    String curSubStr = "";
-    bool found = false;
+    while (start < token.length && iterations < maxIterations) {
+      iterations++;
+      int end = token.length;
+      String curSubStr = "";
+      bool found = false;
 
-    while (start < end) {
-      var substr = token.substring(start, end);
-      if (start > 0) substr = "##$substr";
-      if (vocab.containsKey(substr)) {
-        curSubStr = substr;
-        found = true;
-        break;
+      while (start < end) {
+        var substr = token.substring(start, end);
+        if (start > 0) substr = "##$substr";
+        if (vocab.containsKey(substr)) {
+          curSubStr = substr;
+          found = true;
+          break;
+        }
+        end -= 1;
       }
-      end -= 1;
-    }
 
-    if (!found || curSubStr.isEmpty) {
-      // Fallback: add UNK for this part and advance by 1 char to avoid infinite loop
-      subTokens.add(unkToken);
-      start += 1;  // Advance minimally
-    } else {
-      subTokens.add(curSubStr);
-      start = end;
+      if (!found || curSubStr.isEmpty) {
+        // Fallback: add UNK for this part and advance by 1 char
+        subTokens.add(unkToken);
+        start += 1;
+      } else {
+        subTokens.add(curSubStr);
+        start = end;
+      }
     }
+    
+    // Safety check: if we hit max iterations, return UNK
+    if (iterations >= maxIterations) {
+      return [unkToken];
+    }
+    
+    return subTokens.isEmpty ? [unkToken] : subTokens;
   }
-  return subTokens;
-}
 
 }
 

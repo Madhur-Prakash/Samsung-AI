@@ -136,26 +136,52 @@ class VectorStore {
     }
 
     if (_entries.isEmpty) {
+      print("No entries in vector store");
       return [];
     }
 
-    // Calculate cosine similarities
+    // Check if query embedding is valid (not all zeros)
+    final queryNorm = _calculateNorm(queryEmbedding);
+    if (queryNorm < 1e-6) {
+      print("Query embedding has zero norm, returning empty results");
+      return [];
+    }
+
+    // Calculate cosine similarities with optimization
     final results = <VectorSearchResult>[];
     
     for (final entry in _entries) {
+      // Skip entries with zero embeddings
+      final entryNorm = _calculateNorm(entry.embedding);
+      if (entryNorm < 1e-6) {
+        continue;
+      }
+      
       final similarity = _cosineSimilarity(queryEmbedding, entry.embedding);
-      results.add(VectorSearchResult(
-        id: entry.id,
-        text: entry.text,
-        metadata: entry.metadata,
-        similarity: similarity,
-      ));
+      
+      // Only include results with meaningful similarity
+      if (similarity > 0.1) {
+        results.add(VectorSearchResult(
+          id: entry.id,
+          text: entry.text,
+          metadata: entry.metadata,
+          similarity: similarity,
+        ));
+      }
+    }
+
+    if (results.isEmpty) {
+      print("No similar entries found (similarity threshold: 0.1)");
+      return [];
     }
 
     // Sort by similarity (descending) and take top K
     results.sort((a, b) => b.similarity.compareTo(a.similarity));
     
-    return results.take(topK).toList();
+    final topResults = results.take(topK).toList();
+    print("Found ${topResults.length} relevant results (top similarities: ${topResults.map((r) => r.similarity.toStringAsFixed(3)).join(', ')})");
+    
+    return topResults;
   }
 
   double _cosineSimilarity(List<double> a, List<double> b) {
@@ -168,16 +194,27 @@ class VectorStore {
     double normB = 0.0;
 
     for (int i = 0; i < a.length; i++) {
-      dotProduct += a[i] * b[i];
-      normA += a[i] * a[i];
-      normB += b[i] * b[i];
+      final aVal = a[i];
+      final bVal = b[i];
+      dotProduct += aVal * bVal;
+      normA += aVal * aVal;
+      normB += bVal * bVal;
     }
 
     if (normA == 0.0 || normB == 0.0) {
       return 0.0;
     }
 
-    return dotProduct / (sqrt(normA) * sqrt(normB));
+    final similarity = dotProduct / (sqrt(normA) * sqrt(normB));
+    return similarity.clamp(-1.0, 1.0); // Ensure valid cosine similarity range
+  }
+  
+  double _calculateNorm(List<double> vector) {
+    double sum = 0.0;
+    for (final val in vector) {
+      sum += val * val;
+    }
+    return sum > 0 ? sqrt(sum) : 0.0;
   }
 
   Future<void> clear() async {

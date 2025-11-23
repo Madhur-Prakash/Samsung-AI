@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
@@ -9,7 +8,8 @@ import 'package:tiktoken/tiktoken.dart';
 import 'services/crypto_service.dart';
 import 'dart:math' show exp, Random;
 import 'services/pipeline.dart';
-import 'package:http/http.dart' as http;
+import 'services/performance_monitor.dart';
+import 'services/debug_utils.dart';
 
 void main() {
   runApp(const MyApp());
@@ -36,30 +36,74 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String _status = "Loading model...";
+  String _status = "Loading models...";
   final TextEditingController _chatController = TextEditingController();
   String _chatResponse = "";
 
   late Interpreter _interpreter;
   bool _isModelLoaded = false;
   final enc = getEncoding('gpt2');
+  
+  // Cache embeddings model to avoid reloading
+  Embeddings? _cachedEmbeddings;
+  bool _isEmbeddingsLoaded = false;
 
   @override
   void initState() {
     super.initState();
-    _loadModel();
+    _loadModels();
+  }
+  
+  @override
+  void dispose() {
+    _chatController.dispose();
+    // Clean up interpreter if needed
+    try {
+      _interpreter.close();
+    } catch (e) {
+      print("Error closing interpreter: $e");
+    }
+    PerformanceMonitor.printSummary();
+    super.dispose();
   }
 
-  Future<void> _loadModel() async {
+  Future<void> _loadModels() async {
     try {
+      PerformanceMonitor.startTimer("Load LLM Model");
+      PerformanceMonitor.logMemoryUsage("Before loading models");
+      
+      // Load LLM model
       _interpreter = await Interpreter.fromAsset("assets/models/distilgpt2.tflite");
+      PerformanceMonitor.endTimer("Load LLM Model");
       debugPrint("✅ DistilGPT-2 model loaded!");
+      
       setState(() {
         _isModelLoaded = true;
-        _status = "Model loaded.";
+        _status = "Loading embeddings model...";
       });
+      
+      // Load and cache embeddings model
+      PerformanceMonitor.startTimer("Load Embeddings Model");
+      _cachedEmbeddings = await Embeddings.load();
+      PerformanceMonitor.endTimer("Load Embeddings Model");
+      
+      PerformanceMonitor.startTimer("Validate Embeddings Model");
+      final isValid = await _cachedEmbeddings!.validateModel();
+      PerformanceMonitor.endTimer("Validate Embeddings Model");
+      
+      PerformanceMonitor.logMemoryUsage("After loading models");
+      
+      if (isValid) {
+        _isEmbeddingsLoaded = true;
+        debugPrint("✅ Embeddings model loaded and validated!");
+        setState(() => _status = "All models loaded successfully.");
+      } else {
+        debugPrint("❌ Embeddings model validation failed");
+        setState(() => _status = "Embeddings model validation failed.");
+      }
     } catch (e) {
-      debugPrint("❌ Error loading model: $e");
+      debugPrint("❌ Error loading models: $e");
+      setState(() => _status = "Error loading models: $e");
     }
   }
 
@@ -89,8 +133,8 @@ Future<String> generateAnswer(String prompt, {int maxGenLen = 32}) async {
   print("Validated tokens: ${tokens.take(10).toList()}...");
 
   // Limit initial prompt length to avoid memory issues
-  if (tokens.length > 100) {
-    tokens = tokens.sublist(tokens.length - 100); // Keep last 100 tokens
+  if (tokens.length > 1000) {
+    tokens = tokens.sublist(tokens.length - 1000); // Keep last 1000 tokens
     print("Truncated to last ${tokens.length} tokens");
   }
 
@@ -331,128 +375,129 @@ The future of AI looks very promising with many exciting developments ahead.
     final query = _chatController.text.trim();
     if (query.isEmpty) return;
 
-    // Check if model is loaded before proceeding
-    if (!_isModelLoaded) {
+    // Check if models are loaded
+    if (!_isModelLoaded || !_isEmbeddingsLoaded || _cachedEmbeddings == null) {
       setState(() {
-        _chatResponse = "Model is still loading. Please wait...";
-        _status = "Model not ready yet.";
+        _chatResponse = "Models are still loading. Please wait...";
+        _status = "Models not ready yet.";
       });
       return;
     }
 
-    setState(() => _status = "Searching embeddings...");
+    PerformanceMonitor.startTimer("Full Question Processing");
+    PerformanceMonitor.logMemoryUsage("Before question processing");
+
+    setState(() {
+      _status = "Searching embeddings...";
+      _chatResponse = "Searching for relevant information...";
+    });
 
     try {
-      final embeddings = await Embeddings.load();
-    
-    // VALIDATE THE MODEL FIRST
-    final isValid = await embeddings.validateModel();
-    if (!isValid) {
-      setState(() {
-        _chatResponse = "Model validation failed. Check tokenizer compatibility.";
-        _status = "Model validation error.";
-      });
-      return;
-    }
-
+      // Use cached embeddings model for better performance
+      PerformanceMonitor.startTimer("Open Vector Store");
       final store = await VectorStore.open(embedSize: 384);
-
-      final queryVec = embeddings.embedTexts([query])[0];
+      PerformanceMonitor.endTimer("Open Vector Store");
+      
+      setState(() => _status = "Generating query embedding...");
+      PerformanceMonitor.startTimer("Generate Query Embedding");
+      final queryVec = _cachedEmbeddings!.embedTexts([query])[0];
+      PerformanceMonitor.endTimer("Generate Query Embedding");
+      
+      // Check if embedding is valid (not all zeros)
+      final isValidEmbedding = queryVec.any((val) => val.abs() > 1e-6);
+      if (!isValidEmbedding) {
+        setState(() {
+          _chatResponse = "Failed to generate valid embedding for your query. Please try a different question.";
+          _status = "Embedding generation failed.";
+        });
+        await store.close();
+        PerformanceMonitor.endTimer("Full Question Processing");
+        return;
+      }
+      
+      setState(() => _status = "Searching vector database...");
+      PerformanceMonitor.startTimer("Vector Search");
       final results = await store.search(queryVec, topK: 3);
+      PerformanceMonitor.endTimer("Vector Search");
       await store.close();
 
       if (results.isEmpty) {
         setState(() {
-          _chatResponse = "No relevant chunks found.";
-          _status = "Q&A done.";
+          _chatResponse = "I couldn't find relevant information for your question in my knowledge base. Could you try rephrasing your question?";
+          _status = "No relevant results found.";
         });
-      } else {
-        final cleanedContext = results.map((r) => r.text
-        .replaceAll(RegExp(r'[^a-zA-Z0-9\s\.,!?]'), '')  // Remove special symbols
-        .replaceAll(RegExp(r'\s+'), ' ')  // Normalize spaces
-        .trim()
-    ).join("\n\n").trim();
-
-    if (cleanedContext.isEmpty) {
-      setState(() => _chatResponse = "The context doesn't contain the answer to your question.");
-      return;
-    }
-    print("Cleaned context:\n$cleanedContext");
-    print("User's query: $query");
-
-        setState(() {
-          _chatResponse = "Context:\n$cleanedContext\n\nGenerating answer...";
-          _status = "Generating answer...";
-        });
-
-    final ragPrompt = """
-      Please answer only using the context if missing say "The context doesn't contain the answer to your question."
-      Context: $cleanedContext
-      Question: $query
-      Answer:
-    """;
-
-          // -----------------------------------------this is not working good, using a external api for now-----------------------------------------
-        //   final formattedAnswer = await generateAnswer(ragPrompt);
-        //   final promptString = ragPrompt.trim();
-        //   print("Prompt to LLM:\n$promptString"); 
-
-        //   final tokens = enc.encode(promptString).toList();
-        //   print("First 20 tokens: $tokens");
-        //   setState(() {
-        //     _chatResponse = formattedAnswer;
-        //     _status = "Answer generated.";
-        //   });
-        // //-------------------------------------------------------------------------------------------------------------------------------------
-
-        // --------------------------------API stuff--------------------------------------------------------------------------------------------------
-
-          final client = http.Client();
-          try {
-            final request = http.Request(
-              "GET",
-              Uri.parse("http://10.0.2.2:8000/chat?query=${Uri.encodeComponent(query)}"),
-            );
-
-            final streamedResponse = await client.send(request);
-
-            if (streamedResponse.statusCode == 200) {
-              print("Response from server:${streamedResponse.statusCode}");
-              // Convert to a UTF8 stream
-              final stream = streamedResponse.stream.transform(utf8.decoder);
-
-              // Listen to chunks and append them to UI
-              await for (final chunk in stream) {
-
-                setState(() {
-                  _chatResponse += chunk;
-                });
-              }
-
-              setState(() {
-                _status = "Streaming finished ✅";
-              });
-            } else {
-              throw Exception("Failed with status ${streamedResponse.statusCode}");
-            }
-          } catch (e) {
-            setState(() {
-              _chatResponse = "❌ Error: $e";
-              _status = "Streaming failed.";
-            });
-          } finally {
-            client.close();
-          }
-        //-----------------------------------------------------------------------------------------------------
-
-          }
-        } catch (e) {
-          setState(() {
-            _chatResponse = "Error during search: $e";
-            _status = "Q&A failed.";
-          });
-        }
+        PerformanceMonitor.endTimer("Full Question Processing");
+        return;
       }
+
+      final cleanedContext = results
+          .map((r) => r.text
+              .replaceAll(RegExp(r'[^a-zA-Z0-9\s\.,!?]'), '')
+              .replaceAll(RegExp(r'\s+'), ' ')
+              .trim())
+          .join("\n\n")
+          .trim();
+
+      if (cleanedContext.isEmpty) {
+        setState(() {
+          _chatResponse = "The context doesn't contain the answer to your question.";
+          _status = "Context is empty.";
+        });
+        PerformanceMonitor.endTimer("Full Question Processing");
+        return;
+      }
+
+      setState(() => _status = "Generating answer...");
+
+      final ragPrompt = """
+Please answer only using the context if missing say "The context doesn't contain the answer to your question."
+Context: $cleanedContext
+Question: $query
+Answer:
+""";
+
+      PerformanceMonitor.startTimer("Generate Answer");
+      final answer = await generateAnswer(ragPrompt, maxGenLen: 64);
+      PerformanceMonitor.endTimer("Generate Answer");
+      
+      String cleanedAnswer = answer.trim();
+
+      // Clean up the response
+      if (cleanedAnswer.contains("Answer:")) {
+        final parts = cleanedAnswer.split("Answer:");
+        cleanedAnswer = parts.length > 1 ? parts.last.trim() : cleanedAnswer;
+      }
+
+      if (cleanedAnswer.contains("Context:")) {
+        cleanedAnswer = cleanedAnswer.split("Context:").first.trim();
+      }
+
+      if (cleanedAnswer.contains("Question:")) {
+        cleanedAnswer = cleanedAnswer.split("Question:").first.trim();
+      }
+
+      cleanedAnswer = cleanedAnswer
+          .replaceAll(RegExp(r'^(Please answer|Context:|Question:).*', multiLine: true), '')
+          .trim();
+
+      PerformanceMonitor.endTimer("Full Question Processing");
+      PerformanceMonitor.logMemoryUsage("After question processing");
+      PerformanceMonitor.printSummary();
+
+      setState(() {
+        _chatResponse = cleanedAnswer.isEmpty
+            ? "I couldn't generate a proper response."
+            : cleanedAnswer;
+        _status = "Ready";
+      });
+    } catch (e) {
+      PerformanceMonitor.endTimer("Full Question Processing");
+      setState(() {
+        _chatResponse = "Error during search: $e";
+        _status = "Error occurred";
+      });
+    }
+  }
 
   /// Debug: list files in /enc_files
   Future<void> _listFiles() async {
@@ -463,6 +508,23 @@ The future of AI looks very promising with many exciting developments ahead.
       print(" - ${f.path}");
     }
     setState(() => _status = "Listed ${files.length} files (see console)");
+  }
+  
+  /// Debug embeddings generation
+  Future<void> _debugEmbeddings() async {
+    if (_cachedEmbeddings == null) {
+      setState(() => _status = "Embeddings model not loaded");
+      return;
+    }
+    
+    setState(() => _status = "Running embedding diagnostics...");
+    
+    try {
+      await DebugUtils.testEmbeddingGeneration(_cachedEmbeddings!);
+      setState(() => _status = "Embedding diagnostics completed (check console)");
+    } catch (e) {
+      setState(() => _status = "Embedding diagnostics failed: $e");
+    }
   }
 
   @override
@@ -510,8 +572,8 @@ The future of AI looks very promising with many exciting developments ahead.
               const SizedBox(height: 12),
               ElevatedButton.icon(
                 icon: const Icon(Icons.question_answer),
-                label: Text(_isModelLoaded ? "Ask" : "Loading Model..."),
-                onPressed: _isModelLoaded ? _askQuestion : null,
+                label: Text((_isModelLoaded && _isEmbeddingsLoaded) ? "Ask" : "Loading Models..."),
+                onPressed: (_isModelLoaded && _isEmbeddingsLoaded) ? _askQuestion : null,
               ),
               const SizedBox(height: 12),
               if (_chatResponse.isNotEmpty)
@@ -531,6 +593,12 @@ The future of AI looks very promising with many exciting developments ahead.
                 icon: const Icon(Icons.list),
                 label: const Text("List Files in /enc_files"),
                 onPressed: _listFiles,
+              ),
+              const SizedBox(height: 12),
+              ElevatedButton.icon(
+                icon: const Icon(Icons.bug_report),
+                label: const Text("Debug Embeddings"),
+                onPressed: _isEmbeddingsLoaded ? _debugEmbeddings : null,
               ),
               const SizedBox(height: 30),
               Container(
