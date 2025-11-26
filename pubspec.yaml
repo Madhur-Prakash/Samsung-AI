@@ -34,7 +34,7 @@ dependencies:
   path_provider: ^2.1.4
   sqflite: ^2.3.3
   encrypt: ^5.0.3          # AES decryption helper
-  tflite_flutter: ^0.9.0  # TFLite inference
+  # onnxruntime: ^1.4.1  # ONNX inference (disabled for now)
   collection: ^1.18.0
   huggingface_dart: ^0.0.2
   tiktoken: ^1.0.3
@@ -63,7 +63,7 @@ flutter:
   assets:
     # Embedding model (you provide this file)
     - assets/models/sentence_transformer.tflite
-    - assets/models/distilgpt2.tflite
+    # - assets/models/model.onnx
     # WordPiece vocab for tokenizer (you provide vocab.txt from the model)
     - assets/tokenizer/vocab.txt
     - assets/enc_files/

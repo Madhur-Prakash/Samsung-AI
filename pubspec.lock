@@ -409,7 +409,7 @@ packages:
     source: hosted
     version: "0.7.7"
   tflite_flutter:
-    dependency: "direct main"
+    dependency: "direct overridden"
     description:
       path: "."
       ref: main

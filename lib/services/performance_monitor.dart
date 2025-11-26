@@ -32,7 +32,11 @@ class PerformanceMonitor {
       print("⚠️ Could not get memory info: $e");
     }
   }
-  
+
+  static void printChatResponse(String response) {
+    print("💬 Chat Response: $response");
+  }
+
   static void printSummary() {
     print("\n📊 Performance Summary:");
     print("=" * 50);
